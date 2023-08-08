@@ -51,7 +51,7 @@ export default function Signup() {
           <input ref={confirmPasswordRef} type="password" placeholder="Confirm Password" />
           <button className="btn btn-block">Sign up</button>
           <p className="message">
-            Already Register? <Link to="/login" >Create An Account</Link>
+            Already Register? <Link to="/login" >Login An Account</Link>
           </p>
         </form>
       </div>
