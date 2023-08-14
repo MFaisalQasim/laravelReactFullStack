@@ -8,7 +8,7 @@ export default function Signup() {
   const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
+  const password_confirmationRef = useRef();
   const [errors, setErrors] = useState(null);
   const {setUser, setToken} = useStateContext();
 
@@ -18,7 +18,7 @@ export default function Signup() {
       name: nameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
-      confirmPassword: confirmPasswordRef.current.value,
+      password_confirmation: password_confirmationRef.current.value,
     }
     console.log(payload);
     axiosClient.post('/signup', payload)
@@ -48,7 +48,7 @@ export default function Signup() {
           <input ref={nameRef} type="text" placeholder="Full Name" />
           <input ref={emailRef} type="email" placeholder="Email" />
           <input ref={passwordRef} type="password" placeholder="Password" />
-          <input ref={confirmPasswordRef} type="password" placeholder="Confirm Password" />
+          <input ref={password_confirmationRef} type="password" placeholder="Confirm Password" />
           <button className="btn btn-block">Sign up</button>
           <p className="message">
             Already Register? <Link to="/login" >Login An Account</Link>

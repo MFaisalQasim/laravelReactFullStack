@@ -17,10 +17,10 @@ use App\Http\Controllers\Api\UserController;
 */
 
 Route::middleware('auth:sanctum')->group(function() {
+    Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
 });
-    Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/users', UserController::class);
 });
 

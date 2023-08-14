@@ -27,7 +27,7 @@ export default function Users() {
     setLoading(true);
     axiosClient.get('/users')
     .then(({data}) => {
-    setLoading(false);
+      setLoading(false)
       console.log(data.data);
       setUsers(data.data)
     })
