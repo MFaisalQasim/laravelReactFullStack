@@ -1,12 +1,12 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import Login from "../../react_tailwind/src/views/Login";
-import Users from "../../react_tailwind/src/views/Users";
-import Signup from "../../react_tailwind/src/views/SignUp";
-import NotFound from "../../react_tailwind/src/views/NotFound";
+import Login from "./views/Login";
+import Users from "./views/Users";
+import Signup from "./views/SignUp";
+import NotFound from "./views/NotFound";
 import DefaultLayout from "./components/DefaultLayout";
 import GuestLayout from "./components/GuestLayout";
-import Dashboard from "../../react_tailwind/src/views/Dashboard";
-import UserForm from "../../react_tailwind/src/views/UserForm";
+import Dashboard from "./views/Dashboard";
+import UserForm from "./views/UserForm";
 
 const router = createBrowserRouter([
     {
