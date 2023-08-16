@@ -60,8 +60,8 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        print_r( $request);
-        die;
+        // print_r( $request);
+        // die;
         $data = $request->validated();
         if (isset($data['password'])) {
             $data['password'] = bcrypt($request['password']);

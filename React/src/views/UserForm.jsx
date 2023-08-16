@@ -9,12 +9,13 @@ export default function UserForm() {
   // const emailRef = useRef();
   // const passwordRef = useRef();
   // const password_confirmationRef = useRef();
-  // const {setUser, setToken} = useStateContext();
 
+  const {setNotification} = useStateContext();
   const {id} = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState(null);
+  // notification, setNotification
   const [user, setUser] = useState({
     id: null,
     name: '',
@@ -34,7 +35,7 @@ export default function UserForm() {
     axiosClient.get(`/users/${id}`)
     .then(({data}) => {
     setLoading(false);
-      console.log(data);
+      // console.log(data);
       setUser(data)
     })
     .catch(() => {
@@ -48,6 +49,7 @@ export default function UserForm() {
       // debugger;
       axiosClient.put(`/users/${user.id}`, user)
         .then(() => {
+          setNotification("User Updated Sucessfully")
           navigate('/users')
         })
         .catch(err => {
@@ -59,6 +61,7 @@ export default function UserForm() {
     } else{
       axiosClient.post(`/users`, user)
         .then(() => {
+          setNotification("User Created Sucessfully")
           navigate('/users')
         })
         .catch(err => {
