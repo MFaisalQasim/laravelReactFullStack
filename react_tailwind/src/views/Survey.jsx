@@ -3,7 +3,7 @@ import {useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../axios-client";
 import { useStateContext } from "../contexts/ContextProvider";
 
-export default function UserForm() {
+export default function Survey() {
   
   // const nameRef = useRef();
   // const emailRef = useRef();

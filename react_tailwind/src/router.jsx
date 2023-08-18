@@ -7,6 +7,7 @@ import DefaultLayout from "./components/DefaultLayout";
 import GuestLayout from "./components/GuestLayout";
 import Dashboard from "./views/Dashboard";
 import UserForm from "./views/UserForm";
+import Survey from "./views/Survey";
 
 const router = createBrowserRouter([
     {
@@ -14,12 +15,16 @@ const router = createBrowserRouter([
         element:<DefaultLayout />,
         children: [
             {
-                path: '/',
+                path: '/dashboard',
                 element:<Navigate to="/" />
             },
             {
-                path: '/dashboard',
+                path: '/',
                 element:<Dashboard />
+            },
+            {
+                path: '/survey',
+                element:<Survey />
             },
             {
                 path: '/users',
