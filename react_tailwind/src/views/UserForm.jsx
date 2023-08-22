@@ -4,7 +4,7 @@ import axiosClient from "../axios-client";
 import { useStateContext } from "../contexts/ContextProvider";
 
 export default function UserForm() {
-  
+
   // const nameRef = useRef();
   // const emailRef = useRef();
   // const passwordRef = useRef();
@@ -29,7 +29,7 @@ export default function UserForm() {
       getUser();
     }, [])
   }
-  
+
   const getUser = () => {
     setLoading(true);
     axiosClient.get(`/users/${id}`)
