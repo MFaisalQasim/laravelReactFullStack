@@ -3,7 +3,6 @@ import { createContext,useContext,useState } from "react";
 const StateContext = createContext({
     user: {},
     token: null,
-    survey: [],
     notification: null,
     survey: [],
     setUser: () => {},
@@ -189,9 +188,9 @@ export const ContextProvider = ({children}) => {
       });
 
     // const [notification, _setNotification] = useState(localStorage.getItem('ACCESS_NOTIFICATION'));
-    // const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
+    const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
 
-    const [token, _setToken] = useState('ACCESS_TOKEN');
+    // const [token, _setToken] = useState('ACCESS_TOKEN');
     const [survey, setSurvey] = useState(tmpSurveys);
 
     // const setNotification = (message) => {

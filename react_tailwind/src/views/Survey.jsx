@@ -99,7 +99,7 @@ const onDeleteClick = () => {
   return (
     <>
     <PageComponent title="Survey" button={ (
-      <TButton color="green" to="/surveys/create" >
+      <TButton color="green" to="/survey/create" >
         <PlusCircleIcon className="h-6 w-6 mr-2" />
         Create
       </TButton>
