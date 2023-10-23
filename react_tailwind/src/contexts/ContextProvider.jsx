@@ -189,6 +189,7 @@ export const ContextProvider = ({children}) => {
 
     // const [notification, _setNotification] = useState(localStorage.getItem('ACCESS_NOTIFICATION'));
     const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
+    // const [token, _setToken] = useState('ACCESS_TOKEN');
 
     // const [token, _setToken] = useState('ACCESS_TOKEN');
     const [survey, setSurvey] = useState(tmpSurveys);

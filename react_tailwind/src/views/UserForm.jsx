@@ -46,7 +46,7 @@ export default function UserForm() {
   const onSubmit = e => {
     e.preventDefault();
     if (user.id) {
-      // debugger;
+      debugger;
       axiosClient.put(`/users/${user.id}`, user)
         .then(() => {
           setNotification("User Updated Sucessfully")

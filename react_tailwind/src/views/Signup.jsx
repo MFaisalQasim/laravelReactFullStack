@@ -5,7 +5,7 @@ import { useStateContext } from "../contexts/ContextProvider";
 
 export default function Signup() {
 
-  const {setUser, setToken} = useStateContext();
+  // const {setUser, setToken} = useStateContext();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,25 +17,28 @@ export default function Signup() {
     e.preventDefault();
     setErrors({__html:""});
 
-    const payload = {
-      name: fullName,
-      email: email,
-      password: password,
-      password_confirmation: passwordConfirmation,
-    }
+    // const payload = {
+    //   name: fullName,
+    //   email: email,
+    //   password: password,
+    //   password_confirmation: passwordConfirmation,
+    // }
 
-    axiosClient.post('/signup', payload)
+    axiosClient.post('/signup'
+    // , payload
+    )
     .then(({data}) => {
-      setUser(data.user)
-      setToken(data.token)
+      console.log(data);
+      // setUser(data.user)
+      // setToken(data.token)
     })
     .catch(err => {
-      const response = err.response;
-      if (response && response.status === 422) {
-      const finalErrors = Object.values(err.response.data.errors).reduce((accum, next) => [...accum, ...next],[])
-      setErrors({__html: finalErrors.join('<br>')})
-      }
-      console.log(error);
+      // const response = err.response;
+      // if (response && response.status === 422) {
+      // const finalErrors = Object.values(err.response.data.errors).reduce((accum, next) => [...accum, ...next],[])
+      // setErrors({__html: finalErrors.join('<br>')})
+      // }
+      console.log(err);
     })
   }
 
@@ -50,7 +53,7 @@ export default function Signup() {
               Sign In
             </a>
           </p>
-      <form className="space-y-6" action="#" method="POST">
+      <form className="space-y-6" action="#" method="POST" onSubmit={onSubmit}>
         <div>
           <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
             Email address

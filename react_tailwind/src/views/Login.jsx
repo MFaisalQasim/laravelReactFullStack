@@ -10,26 +10,30 @@ export default function Login() {
   const {setUser, setToken} = useStateContext();
   const onSubmit = (e) =>{
     e.preventDefault();
-    const payload = {
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-    }
+    // const payload = {
+    //   email: emailRef.current.value,
+    //   password: passwordRef.current.value,
+    // }
     setErrors(null);
-    axiosClient.post('/login', payload)
+    axiosClient.post('/login'
+    // , payload
+    )
     .then(({data}) => {
-      setUser(data.user)
-      setToken(data.token)
+      console.log(data);
+      // setUser(data.user)
+      // setToken(data.token)
     })
     .catch(err => {
-      const response = err.response;
-      if (response && response.status === 422) {
-        if (response.data.errors) { 
-          setErrors(response.data.errors)       
-        }
-        setErrors(
-          {email: [response.data.message]}
-        )  
-      }
+      console.log(err);
+      // const response = err.response;
+      // if (response && response.status === 422) {
+      //   if (response.data.errors) {
+      //     setErrors(response.data.errors)
+      //   }
+      //   setErrors(
+      //     {email: [response.data.message]}
+      //   )  
+      // }
     })
   }
 
@@ -45,7 +49,7 @@ export default function Login() {
             </a>
           </p>
 
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" action="#" method="POST" onSubmit={onSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
