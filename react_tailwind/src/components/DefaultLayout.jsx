@@ -3,6 +3,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { NavLink, Navigate, Outlet } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider'
+import axiosClient from '../axios-client'
 
 const navigation = [
   { name: 'Dashboard', to: '/'},
@@ -11,33 +12,26 @@ const navigation = [
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Sign out'},
 ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
-const onDelete = () => {
-
-  console.log('Are Sure Want to Delete User?');
-
-  // if (!window.confirm('Are Sure Want to Delete User?')) {
-  //   return
-  // }
-
-  // axiosClient.delete(`/users/${u.id}`)
-  // .then(() => {
-    
-  //   setNotification("User Deleted Sucessfully");
-  //   getUser();
-  // })
-}
 
 export default function DefaultLayout() {
-  const {user, token} = useStateContext();
+  const {user, token, setToken, setUser} = useStateContext();
 
   if (! token) {
     return <Navigate to='login' />
+  }
+  const SignOut = () => {
+    console.log('Are Sure Want to Delete User?');
+    axiosClient.post(`/logout`)
+    .then(() => {
+      setToken(null);
+      setUser({});
+    })
   }
   
   return (
@@ -112,7 +106,7 @@ export default function DefaultLayout() {
                                 {({ active }) => (
                                   <a                                
                                     href={item.href}
-                                    onClick={item.name == "Sign out" ? onDelete : undefined}
+                                    onClick={item.name == "Sign out" ? SignOut : undefined}
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
                                       'block px-4 py-2 text-sm text-gray-700'
@@ -123,6 +117,19 @@ export default function DefaultLayout() {
                                 )}
                               </Menu.Item>
                             ))}
+                              {/* <Menu.Item key={item.name}
+                               >
+                                  <a                                
+                                    href={item.href}
+                                    onClick={item.name == "Sign out" ? onDelete : undefined}
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm text-gray-700'
+                                    )}
+                                  >
+                                    SignOut
+                                  </a>
+                              </Menu.Item> */}
                           </Menu.Items>
                         </Transition>
                       </Menu>
@@ -183,7 +190,7 @@ export default function DefaultLayout() {
                       <Disclosure.Button
                         key={item.name}
                         as="a"
-                        onClick={item.name == "Sign out" ? onDelete : undefined}
+                        onClick={item.name == "Sign out" ? SignOut : undefined}
                         href={item.href}
                         className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                       >

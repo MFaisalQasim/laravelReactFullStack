@@ -1,42 +1,41 @@
 // import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
-import { useRef, useState } from "react";
+import {useState } from "react";
 import axiosClient from "../axios-client";
 
 export default function Login() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const [errors, setErrors] = useState(null);
+
   const {setUser, setToken} = useStateContext();
-  const onSubmit = (e) =>{
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState({__html: ""});
+
+  const onSubmit = e =>{
     e.preventDefault();
-    // const payload = {
-    //   email: emailRef.current.value,
-    //   password: passwordRef.current.value,
-    // }
-    setErrors(null);
+    setError({__html:""});
+
+    const payload = {
+      email: email,
+      password: password,
+    }
+
     axiosClient.post('/login'
-    // , payload
+    , payload
     )
     .then(({data}) => {
       console.log(data);
-      // setUser(data.user)
-      // setToken(data.token)
+      setUser(data.user)
+      setToken(data.token)
     })
-    .catch(err => {
-      console.log(err);
-      // const response = err.response;
-      // if (response && response.status === 422) {
-      //   if (response.data.errors) {
-      //     setErrors(response.data.errors)
-      //   }
-      //   setErrors(
-      //     {email: [response.data.message]}
-      //   )  
-      // }
+    .catch(errors => {
+      const response = errors.response;
+      if (response && response.status === 422) {
+      const finalError = Object.values(errors.response.data.error).reduce((accum, next) => [...accum, ...next],[])
+      setError({__html: finalError.join('<br>')})
+      }
+      console.error(error);
     })
   }
-
   return (
     <>
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -60,6 +59,8 @@ export default function Login() {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -83,6 +84,8 @@ export default function Login() {
                   name="password"
                   type="password"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -99,6 +102,5 @@ export default function Login() {
             </div>
           </form>
     </>
-
   )
 }
