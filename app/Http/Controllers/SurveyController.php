@@ -13,7 +13,12 @@ class SurveyController extends Controller
      */
     public function index()
     {
-        //
+        $user = $request->user;
+        SurveyResource::collection(
+            Survey::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+        );
     }
 
     /**
@@ -29,15 +34,31 @@ class SurveyController extends Controller
      */
     public function store(StoreSurveyRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        if (isset($data['image'])) {
+            $relativePath = $this->saveImage($data['image']);
+            $data['image'] = $relativePath;
+        }
+
+        $survey = Survey::create($data);
+        foreach ($data['questions'] as $question) {
+            $question['survey_id'] = $survey->id;
+            $this->createQuestion($question);
+        }
+        return new SurveyResource($survey);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Survey $survey)
+    public function show(Survey $survey, Request $request)
     {
-        //
+        $user = $request->user();
+        if ($user->id !== $survey->user_id) {
+            return abort(403, "Unauthorized Action Request");
+        }
+        return new SurveyResource($survey);
     }
 
     /**
@@ -53,14 +74,120 @@ class SurveyController extends Controller
      */
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
-        //
+        $data = $request->validated();
+
+        if (isset($data['image'])) {
+            $relativePath = $this->saveImage($data['image']);
+            $data['image'] = $relativePath;
+
+            if ($survey->image) {
+                $absolutePath = public_path($survey->image);
+                file_delete($absolutePath);
+            }
+        }
+
+        $survey = Survey::update($data);
+
+        $existingIds = $survey->questions()->pluck('id')->toArray();
+        $newIds  = Arr::pluck($data['questions'], 'id');
+
+        $toDelete = array_diff($existingIds, $newIds);
+
+        $toAdd = array_diff($newIds, $existingIds);
+
+        SurveyQuestion::delete(toDelete);
+
+        foreach ($data['questions'] as $question) {
+            if (in_array($question['id'], $toAdd)) {            
+                $question['survey_id'] = $survey->id;
+                $this->createQuestion($question);
+            }
+        }
+
+        $toUpdate = collect($data['questions'])->keyBy('id');
+        foreach ($survey->questions as $question) {
+            if (isset($toUpdate[$question->id])) {
+                $this->updateQuestion($question, $toUpdate[$question->id]);
+            }
+        }
+        return new SurveyResource($survey);        
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Survey $survey)
+    public function destroy(Survey $survey, Request $request)
     {
-        //
+        $user = $request->user();
+        if ($user->id !== $survey->user_id) {
+            return abort(403, "Unauthorized Action Request");
+        }
+        $survey->delete();
+
+        if ($survey->image) {
+            $absolutePath = public_path($survey->image);
+            file_delete($absolutePath);
+        }
+        return response('', 204);
+    }
+
+    // saveImage
+
+    private function saveImage($image){
+        if (preg_match('/^data:image\/(w+);base64,/', $image, $type)) {
+            $image = substr($image, strpos($image, ',')+1);
+            $type = strtolower($type[1]);
+            if (!in_array($type, ['jpg', 'png', 'gif', 'jpeg'])) {
+                throw new Exception("Invalid Image Type");                
+            }
+            $image = str_replace(' ', '+', $image);
+            $image = base64_decode($image);
+            if ($image == false) {
+                throw new Exception("Image Decoded Failed");                
+            }
+        } else {
+            throw new Exception("Invalid Image Data URI");
+        }
+        $dir = 'images/';
+        $file = Str::random() . "." . $type;
+        $absolutePath = public_path($dir);
+        $relatuvePath = $dir . $file;
+        if (!file_exists($absolutePath)) {
+            mkdir($absolutePath, 0777, true);
+        }
+        file_put_contents($relativePath, $image);
+        return $relatuvePath;
+    }
+
+    // createQuestion
+
+    private function createQuestion($data){
+        if (is_array($data['data'])) {
+            $data['data'] = json_encode($data['data']);
+        }
+        $validator = Validator::make($data,[
+            'question' => 'required'|"string",
+            'type' => ['required', new Enum(QuestionTypeEnum::class)],
+            'description' => 'nullable|string',
+            'data' => 'present',
+            'survey_id' => 'exists:App\Models\Survey,id'
+        ]);
+        return SurveyQuery::create($validator->validated());
+    }
+
+    // updateQuestion
+
+    private function updateQuestion(SurveyQuery $question, $data){
+        if (is_array($data['data'])) {
+            $data['data'] = json_encode($data['data']);
+        }
+        $validator = Validator::make($data,[
+            'question' => 'required'|"string",
+            'type' => ['required', new Enum(QuestionTypeEnum::class)],
+            'description' => 'nullable|string',
+            'data' => 'present',
+            'survey_id' => 'exists:App\Models\Survey,id'
+        ]);
+        return $question::update($validator->validated());
     }
 }

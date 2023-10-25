@@ -2,6 +2,7 @@ import { useState } from "react"
 import PageComponent from "../components/PageComponent";
 import { LinkIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import TButton from "../components/core/TButton";
+import axiosClient from "../axios-client";
 
 export default function SurveyView() {
     const [survey, setSurvey] = useState({
@@ -33,8 +34,18 @@ export default function SurveyView() {
     }
 
     const onSubmit = (e) => {
-      console.log(e);
-      console.log('onSubmit');
+      e.preventDefault();
+
+      axiosClient.post('/survey', {
+        title: survey.title,
+        slug: survey.slug,
+        status: survey.status,
+        description: survey.description,
+        image: survey.image,
+        image_url: survey.image_url,
+        expire_date: survey.expire_date,
+        questions: survey.questions,
+      })
     }
 
   return (
@@ -119,7 +130,7 @@ export default function SurveyView() {
             <label htmlFor="" className="block text-sm font-medium text-gray-">
               Expire Date 
             </label>
-            <input type="text"
+            <input type="date"
              name="expire_date"
              id="expire_date"
              value={survey.expire_date}
