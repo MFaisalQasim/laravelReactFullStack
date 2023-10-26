@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SurveyResource extends JsonResource
 {
+    // public static $wrap = false;
     /**
      * Transform the resource into an array.
      *
@@ -16,9 +17,10 @@ class SurveyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            // 'user_id' => $this->user_id,
             'title' => $this->title,
             'slug' => $this->slug,
+            'status' => $this->status,
+            // 'user_id' => $this->user_id,
             // 'description' => $this->description,
             // 'image' => $this->image,
             // 'created_at' => $this->created_at,

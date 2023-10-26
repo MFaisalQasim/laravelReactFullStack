@@ -1,6 +1,6 @@
 import { useState } from "react"
 import PageComponent from "../components/PageComponent";
-import { LinkIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import {PhotoIcon } from "@heroicons/react/24/outline";
 import TButton from "../components/core/TButton";
 import axiosClient from "../axios-client";
 
@@ -17,11 +17,10 @@ export default function SurveyView() {
     });
 
     const onImageChose = (e) => {
-      const file = e.target.file[0]
-      console.log('onImageChose');
-      console.log(file);
 
+      const file = e.target.file[0]
       const reader = new FileReader();
+      
       reader.onload = () => {
         setSurvey({
           ...survey,
@@ -37,14 +36,15 @@ export default function SurveyView() {
       e.preventDefault();
 
       axiosClient.post('/survey', {
-        title: survey.title,
-        slug: survey.slug,
-        status: survey.status,
-        description: survey.description,
-        image: survey.image,
-        image_url: survey.image_url,
-        expire_date: survey.expire_date,
-        questions: survey.questions,
+        id: 'id',
+        title: 'title',
+        slug: 'slug',
+        status: true,
+        // description: 'description',
+        // image: 'image',
+        // image_url: 'image_url',
+        // expire_date: 'expire_date',
+        questions: [],
       })
     }
 
@@ -55,8 +55,8 @@ export default function SurveyView() {
     //     <LinkIcon className="h-4 w-4 mr-2" />
     //     Public Link
     //   </TButton>
-    // }      
-    >  
+    // }
+    >
     <form action="#" method="Post" onSubmit={onSubmit} >
       <div className="shadow sm:overflow-hidden sm:rounded-md">
         <div className="space-y-6 bg-white px-4 py sm:p-6">

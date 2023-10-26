@@ -1,10 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Survey;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
+use App\Enums\QuestionTypeEnum;
+use App\Http\Requests\StoreSurveyAnswerRequest;
+use App\Http\Resources\SurveyResource;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Enum;
+use Symfony\Component\HttpFoundation\Request;
 
 class SurveyController extends Controller
 {
@@ -35,6 +42,7 @@ class SurveyController extends Controller
     public function store(StoreSurveyRequest $request)
     {
         $data = $request->validated();
+        // print_r($data);
 
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);
@@ -186,7 +194,7 @@ class SurveyController extends Controller
             'type' => ['required', new Enum(QuestionTypeEnum::class)],
             'description' => 'nullable|string',
             'data' => 'present',
-            'survey_id' => 'exists:App\Models\Survey,id'
+            'id' => 'exists:App\Models\SurveyQuestion,id'
         ]);
         return $question::update($validator->validated());
     }
