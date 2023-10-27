@@ -18,7 +18,7 @@ export default function SurveyView() {
 
     const onImageChose = (e) => {
 
-      const file = e.target.file[0]
+      const file = e.target.files[0]
       const reader = new FileReader();
       
       reader.onload = () => {
@@ -35,16 +35,24 @@ export default function SurveyView() {
     const onSubmit = (e) => {
       e.preventDefault();
 
-      axiosClient.post('/survey', {
-        id: 'id',
-        title: 'title',
-        slug: 'slug',
-        status: true,
-        // description: 'description',
-        // image: 'image',
-        // image_url: 'image_url',
-        // expire_date: 'expire_date',
-        questions: [],
+      const payload = { ...survey };
+      if (payload.image) {
+        payload.image = payload.image_url
+      }
+      axiosClient.post('/survey',payload
+      // , {
+        // id: survey.id,
+        // title: survey.title,
+        // slug: survey.slug,
+        // status:survey.status,
+        // description: survey.description,
+        // image: survey.image,
+        // image_url: survey.image_url,
+        // expire_date: survey.expire_date,
+        // questions: [],
+      // }
+      ).then((res) => {
+        console.log(res);
       })
     }
 
@@ -57,7 +65,7 @@ export default function SurveyView() {
     //   </TButton>
     // }
     >
-    <form action="#" method="Post" onSubmit={onSubmit} >
+    <form method="Post" onSubmit={onSubmit} >
       <div className="shadow sm:overflow-hidden sm:rounded-md">
         <div className="space-y-6 bg-white px-4 py sm:p-6">
           {/* {error && (
@@ -73,7 +81,7 @@ export default function SurveyView() {
               {survey.image_url && (
                 <img 
                   src={survey.image_url}
-                  alt=""
+                  alt={survey.title}
                   className="w-32 h-32 object-cover"
                 />
               )}
