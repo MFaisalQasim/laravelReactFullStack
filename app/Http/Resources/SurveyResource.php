@@ -20,11 +20,11 @@ class SurveyResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status,
-            // 'user_id' => $this->user_id,
-            // 'description' => $this->description,
-            // 'image' => $this->image,
-            // 'created_at' => $this->created_at,
-            // 'updated_at' => $this->updated_at,
+            'user_id' => $this->user_id,
+            'description' => $this->description,
+            'image' => $this->image,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             // 'questions' => SurveyQuestionResource::collection($this->questions),
         ];
     }

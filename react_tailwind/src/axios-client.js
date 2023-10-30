@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "./router";
 
 const axiosClient = axios.create({
   baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`
@@ -19,6 +20,7 @@ axiosClient.interceptors.response.use(
       const { response } = error;
       if (response.status === 401) {
         localStorage.removeItem("ACCESS_TOKEN");
+        router.navigate('/login')
       }
     } catch (error) {
       console.log(error);

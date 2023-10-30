@@ -1,15 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Survey;
-use App\Http\Requests\StoreSurveyRequest;
-use App\Http\Requests\UpdateSurveyRequest;
+// use App\Http\Controllers\Controller;
+// use App\Models\Survey;
+// use App\Http\Requests\StoreSurveyRequest;
+// use App\Http\Requests\UpdateSurveyRequest;
+// use App\Enums\QuestionTypeEnum;
+// use App\Http\Requests\StoreSurveyAnswerRequest;
+// use App\Http\Resources\SurveyResource;
+// use Illuminate\Support\Facades\Validator;
+// use Illuminate\Validation\Rules\Enum;
+// use Symfony\Component\HttpFoundation\Request;
+
 use App\Enums\QuestionTypeEnum;
 use App\Http\Requests\StoreSurveyAnswerRequest;
 use App\Http\Resources\SurveyResource;
+use App\Models\Survey;
+use App\Http\Requests\StoreSurveyRequest;
+use App\Http\Requests\UpdateSurveyRequest;
+use App\Models\SurveyAnswer;
+use App\Models\SurveyQuestion;
+use App\Models\SurveyQuestionAnswer;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,7 +59,6 @@ class SurveyController extends Controller
     public function store(StoreSurveyRequest $request)
     {
         $data = $request->validated();
-        // print_r($data);
 
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);
@@ -79,7 +95,7 @@ class SurveyController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
+    */
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
         $data = $request->validated();
@@ -106,7 +122,7 @@ class SurveyController extends Controller
         SurveyQuestion::delete(toDelete);
 
         foreach ($data['questions'] as $question) {
-            if (in_array($question['id'], $toAdd)) {            
+            if (in_array($question['id'], $toAdd)) {
                 $question['survey_id'] = $survey->id;
                 $this->createQuestion($question);
             }
@@ -118,7 +134,7 @@ class SurveyController extends Controller
                 $this->updateQuestion($question, $toUpdate[$question->id]);
             }
         }
-        return new SurveyResource($survey);        
+        return new SurveyResource($survey);
     }
 
     /**
@@ -142,29 +158,30 @@ class SurveyController extends Controller
     // saveImage
 
     private function saveImage($image){
-        if (preg_match('/^data:image\/(w+);base64,/', $image, $type)) {
+        if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+        // if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
             $image = substr($image, strpos($image, ',')+1);
             $type = strtolower($type[1]);
             if (!in_array($type, ['jpg', 'png', 'gif', 'jpeg'])) {
-                throw new Exception("Invalid Image Type");                
+                throw new \Exception("Invalid Image Type");                
             }
             $image = str_replace(' ', '+', $image);
             $image = base64_decode($image);
             if ($image == false) {
-                throw new Exception("Image Decoded Failed");                
+                throw new \Exception("Image Decoded Failed");                
             }
         } else {
-            throw new Exception("Invalid Image Data URI");
+            throw new \Exception("Invalid Image Data URI");
         }
         $dir = 'images/';
         $file = Str::random() . "." . $type;
         $absolutePath = public_path($dir);
-        $relatuvePath = $dir . $file;
+        $relativePath = $dir . $file;
         if (!file_exists($absolutePath)) {
             mkdir($absolutePath, 0777, true);
         }
         file_put_contents($relativePath, $image);
-        return $relatuvePath;
+        return $relativePath;
     }
 
     // createQuestion

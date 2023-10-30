@@ -5,16 +5,21 @@ import TButton from "../components/core/TButton";
 import axiosClient from "../axios-client";
 
 export default function SurveyView() {
+
     const [survey, setSurvey] = useState({
         title : '',
         slug : '',
         status : false,
-        description : '',
+        description : "",
         image : null,
         image_url : null,
         expire_date : '',
         questions : [],
     });
+    // const [error, setError] = useState({});
+    const [error, setError] = useState({__html: ""});
+    const [eachError, setEachError] = useState({__html: ""});
+    const [expireDate,setExpireDate] = useState({__html: ""});    
 
     const onImageChose = (e) => {
 
@@ -39,21 +44,39 @@ export default function SurveyView() {
       if (payload.image) {
         payload.image = payload.image_url
       }
-      axiosClient.post('/survey',payload
-      // , {
-        // id: survey.id,
-        // title: survey.title,
-        // slug: survey.slug,
-        // status:survey.status,
-        // description: survey.description,
-        // image: survey.image,
-        // image_url: survey.image_url,
-        // expire_date: survey.expire_date,
-        // questions: [],
-      // }
-      ).then((res) => {
+      delete payload.image_url;
+      axiosClient.post('/survey',payload)
+      .then((res) => {
         console.log(res);
       })
+      .catch(error => {
+        // if (err && err.response) {
+        //   const error = err.response.data
+        //   ;
+        //   setError(error);
+        // }
+        // console.log(err.response.data);
+        
+        var eachError = [];
+        var expireDate = '';
+        const response = error.response;
+        if (response && error.response.status === 422) {
+          eachError = Object.values(response.data.errors).reduce((accum, next) => [...accum, ...next],[])
+          expireDate = eachError[1];
+          setError({__html: eachError.join('<br>')})
+          setEachError({__html: eachError})
+          setExpireDate({__html: expireDate})
+          console.log(eachError);
+          console.log(expireDate);
+
+        }
+        else{
+          setError({__html: response.data.message})
+          setEachError({__html: eachError})
+          // setExpireDate({__html: expireDate})
+          // console.log(eachError);
+        }
+    })
     }
 
   return (
@@ -69,9 +92,12 @@ export default function SurveyView() {
       <div className="shadow sm:overflow-hidden sm:rounded-md">
         <div className="space-y-6 bg-white px-4 py sm:p-6">
           {/* {error && (
-            <div className="bg-red-500 text-white py-3 px-3">{error}</div>
+            (error).forEach(err => {
+                  <div className="bg-red-500 text-white py-3 px-3">{err}</div>
+            })
             )
           } */}
+          {error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error} ></div>)}
           {/*Image*/}
           <div>
             <label htmlFor="" className="block text-sm-font-medium text-gray-700">
@@ -79,7 +105,7 @@ export default function SurveyView() {
             </label>
             <div className="mt-1 flex items-center">
               {survey.image_url && (
-                <img 
+                <img
                   src={survey.image_url}
                   alt={survey.title}
                   className="w-32 h-32 object-cover"
@@ -100,7 +126,7 @@ export default function SurveyView() {
             </div>
           </div>
           {/*Image*/}
-          
+
           {/*Title*/}
           <div className="col-soan-6 sm:col-span-3">
             <label htmlFor="" className="block text-sm font-medium text-gray-700">
@@ -116,21 +142,28 @@ export default function SurveyView() {
             placeholder="Survey Title"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
           </div>
-
-          {/*Description*/}
-          <div className="col-span-6 sm:col-span-3">
-            <label htmlFor="" className="block text-sm font-medium text-gray-700">
-              Description
-            </label>
-            <textarea name="description" id="description"
-             cols="30"
-             rows="10" 
-             onChange={(e) => 
-              setSurvey({...survey, description: e.target.value})
-            }
-             placeholder="Describe your survey"
-             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:test-sm"></textarea>
-          </div>
+          
+              {/*Description*/}
+              <div className="col-span-6 sm:col-span-3">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Description
+                </label>
+                {/* <pre>{ JSON.stringify(survey, undefined, 2) }</pre> */}
+                <textarea
+                  name="description"
+                  id="description"
+                  value={survey.description || ""}
+                  onChange={(ev) =>
+                    setSurvey({ ...survey, description: ev.target.value })
+                  }
+                  placeholder="Describe your survey"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                ></textarea>
+              </div>
+              {/*Description*/}
 
           {/*Expire Date*/}
 
@@ -149,12 +182,22 @@ export default function SurveyView() {
             }
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm-text-sm" />
           </div>
+          {/* {
+          eachError.forEach(err => {
+            if (err.includes("expire date")) {
+              console.log(err.includes("expire date"));
+              console.log(err);
+             {err.__html && ( <div className="bg-red-500 rounded py-2 px-3 text-white"  dangerouslySetInnerHTML={error} ></div>)}
+            }
+            })
+          } */}
+          {expireDate.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={expireDate} ></div>)}
 
           {/*Active*/}
           <div className="flex items-start">
             <div className="flex h-5 items-center">
               <input 
-               type="text"
+               type="checkbox"
                name="status"
                id="status"
                checked={survey.status}
@@ -174,6 +217,9 @@ export default function SurveyView() {
                 </p>
             </div>           
           </div>
+
+
+
           {/* <button type="button" onClick={addQuestion} >
             Add question
           </button> */}

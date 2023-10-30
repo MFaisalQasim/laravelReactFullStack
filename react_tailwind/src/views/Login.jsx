@@ -23,17 +23,20 @@ export default function Login() {
     , payload
     )
     .then(({data}) => {
-      console.log(data);
       setUser(data.user)
       setToken(data.token)
     })
-    .catch(errors => {
-      const response = errors.response;
-      if (response && response.status === 422) {
-      const finalError = Object.values(errors.response.data.error).reduce((accum, next) => [...accum, ...next],[])
+    .catch(error => {
+      const response = error.response.data.errors;
+      if (response && error.response.status === 422) {
+      const finalError = Object.values(error.response.data.errors).reduce((accum, next) => [...accum, ...next],[])
       setError({__html: finalError.join('<br>')})
       }
-      console.error(error);
+      else{
+        setError({__html: error.response.data.message})
+        console.error(error.response.data);
+        console.error(error.response.data.message);
+      }
     })
   }
   return (
@@ -49,6 +52,7 @@ export default function Login() {
           </p>
 
           <form className="space-y-6" action="#" method="POST" onSubmit={onSubmit}>
+          {error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error} ></div>)}
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address

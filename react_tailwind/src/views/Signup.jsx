@@ -10,12 +10,12 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [errors, setErrors] = useState({__html: ""});
+  const [error, setError] = useState({__html: ""});
 
   const onSubmit = e =>{
 
     e.preventDefault();
-    setErrors({__html:""});
+    setError({__html:""});
 
     const payload = {
       name: fullName,
@@ -33,12 +33,16 @@ export default function Signup() {
       setToken(data.token)
     })
     .catch(error => {
-      const response = error.response;
+      const response = error.response.data.errors;
       if (response && response.status === 422) {
       const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...accum, ...next],[])
-      setErrors({__html: finalErrors.join('<br>')})
+      setError({__html: finalErrors.join('<br>')})
       }
-      console.error(error);
+      else{
+        setError({__html: error.response.data.message})
+        console.error(error.response.data);
+        console.error(error.response.data.message);
+      }
     })
   }
 
@@ -53,7 +57,7 @@ export default function Signup() {
               Login
             </a>
           </p>
-          {errors.__html && (<div className="bg-500-red rounded py-2 px-3 text-blue" dangerouslySetInnerHTML={errors} ></div>)}
+          {error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error} ></div>)}
       <form className="space-y-6" action="#" method="POST" onSubmit={onSubmit}>
         <div>
           <label htmlFor="fullName" className="block text-sm font-medium leading-6 text-gray-900">

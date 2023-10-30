@@ -16,7 +16,7 @@ class Survey extends Model
         'user_id' ,
         'title' ,
         'image' ,
-        'describtion' ,
+        'description' ,
         'status' ,
         'expire_date' ];
     
