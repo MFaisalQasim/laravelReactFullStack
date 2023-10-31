@@ -3,6 +3,7 @@ import PageComponent from "../components/PageComponent";
 import {PhotoIcon } from "@heroicons/react/24/outline";
 import TButton from "../components/core/TButton";
 import axiosClient from "../axios-client";
+import SurveyQuestions from "../components/SurveyQuestions";
 
 export default function SurveyView() {
 
@@ -16,16 +17,16 @@ export default function SurveyView() {
         expire_date : '',
         questions : [],
     });
+    
     // const [error, setError] = useState({});
     const [error, setError] = useState({__html: ""});
-    const [eachError, setEachError] = useState({__html: ""});
+    // const [eachError, setEachError] = useState({__html: ""});
     const [expireDate,setExpireDate] = useState({__html: ""});    
 
     const onImageChose = (e) => {
 
       const file = e.target.files[0]
       const reader = new FileReader();
-      
       reader.onload = () => {
         setSurvey({
           ...survey,
@@ -57,26 +58,30 @@ export default function SurveyView() {
         // }
         // console.log(err.response.data);
         
-        var eachError = [];
+        // var eachError = [];
         var expireDate = '';
         const response = error.response;
         if (response && error.response.status === 422) {
-          eachError = Object.values(response.data.errors).reduce((accum, next) => [...accum, ...next],[])
-          expireDate = eachError[1];
-          setError({__html: eachError.join('<br>')})
-          setEachError({__html: eachError})
+          // eachError = Object.values(response.data.errors).reduce((accum, next) => [...accum, ...next],[])
+          // expireDate = eachError[1];
+          // setError({__html: eachError.join('<br>')})
+          // setEachError({__html: eachError})
           setExpireDate({__html: expireDate})
-          console.log(eachError);
-          console.log(expireDate);
+          // console.log(eachError);
+          // console.log(expireDate);
 
         }
         else{
           setError({__html: response.data.message})
-          setEachError({__html: eachError})
+          // setEachError({__html: eachError})
           // setExpireDate({__html: expireDate})
           // console.log(eachError);
         }
     })
+    }
+
+    function onQuestionUpdate(survey) {
+      setSurvey({...survey})
     }
 
   return (
@@ -183,7 +188,7 @@ export default function SurveyView() {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm-text-sm" />
           </div>
           {/* {
-          eachError.forEach(err => {
+          // eachError.forEach(err => {
             if (err.includes("expire date")) {
               console.log(err.includes("expire date"));
               console.log(err);
@@ -224,6 +229,10 @@ export default function SurveyView() {
             Add question
           </button> */}
         </div>
+        <SurveyQuestions
+          questions={survey.questions}
+          onQuestionUpdate={onQuestionUpdate}
+        />
         <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
           <TButton>Save</TButton>
         </div>
