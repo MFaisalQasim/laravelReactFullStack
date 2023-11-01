@@ -5,6 +5,7 @@ const StateContext = createContext({
     token: null,
     notification: null,
     survey: [],
+    questionTypes: [],
     setUser: () => {},
     setToken: () => {},
     setNotification: () => {},
@@ -190,16 +191,13 @@ export const ContextProvider = ({children}) => {
     // const [notification, _setNotification] = useState(localStorage.getItem('ACCESS_NOTIFICATION'));
     const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
     // const [token, _setToken] = useState('ACCESS_TOKEN');
-
-    // const [token, _setToken] = useState('ACCESS_TOKEN');
     const [survey, setSurvey] = useState(tmpSurveys);
+    const [questionTypes] = useState(['text','select','radio', 'checkbox', 'textarea']);
 
     // const setNotification = (message) => {
-
     //     _setNotification(message)
     //     setTimeout(() => {
     //     _setNotification('')
-            
     //     }, 5000);
     // }
     const setToken = (token) => {
@@ -223,6 +221,7 @@ export const ContextProvider = ({children}) => {
                 // setNotification,
                 survey,
                 setSurvey,
+                questionTypes,
             }
         }>
             {children}

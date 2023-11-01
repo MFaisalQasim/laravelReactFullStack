@@ -50,14 +50,7 @@ export default function SurveyView() {
       .then((res) => {
         console.log(res);
       })
-      .catch(error => {
-        // if (err && err.response) {
-        //   const error = err.response.data
-        //   ;
-        //   setError(error);
-        // }
-        // console.log(err.response.data);
-        
+      .catch(error => {        
         // var eachError = [];
         var expireDate = '';
         const response = error.response;
@@ -230,7 +223,7 @@ export default function SurveyView() {
           </button> */}
         </div>
         <SurveyQuestions
-          questions={survey.questions}
+          questions={survey}
           onQuestionUpdate={onQuestionUpdate}
         />
         <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
