@@ -1,18 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-// use App\Http\Controllers\Controller;
-// use App\Models\Survey;
-// use App\Http\Requests\StoreSurveyRequest;
-// use App\Http\Requests\UpdateSurveyRequest;
-// use App\Enums\QuestionTypeEnum;
-// use App\Http\Requests\StoreSurveyAnswerRequest;
-// use App\Http\Resources\SurveyResource;
-// use Illuminate\Support\Facades\Validator;
-// use Illuminate\Validation\Rules\Enum;
-// use Symfony\Component\HttpFoundation\Request;
-
 use App\Enums\QuestionTypeEnum;
 use App\Http\Requests\StoreSurveyAnswerRequest;
 use App\Http\Resources\SurveyResource;
@@ -35,9 +23,10 @@ class SurveyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = $request->user;
+        $user = $request->user();
+
         SurveyResource::collection(
             Survey::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
@@ -66,10 +55,10 @@ class SurveyController extends Controller
         }
 
         $survey = Survey::create($data);
-        foreach ($data['questions'] as $question) {
-            $question['survey_id'] = $survey->id;
-            $this->createQuestion($question);
-        }
+        // foreach ($data['questions'] as $question) {
+        //     $question['survey_id'] = $survey->id;
+        //     $this->createQuestion($question);
+        // }
         return new SurveyResource($survey);
     }
 
@@ -110,7 +99,8 @@ class SurveyController extends Controller
             }
         }
 
-        $survey = Survey::update($data);
+        // $survey = Survey::update($data);
+        $survey->update($data);
 
         $existingIds = $survey->questions()->pluck('id')->toArray();
         $newIds  = Arr::pluck($data['questions'], 'id');
@@ -119,7 +109,7 @@ class SurveyController extends Controller
 
         $toAdd = array_diff($newIds, $existingIds);
 
-        SurveyQuestion::delete(toDelete);
+        SurveyQuestion::delete($toDelete);
 
         foreach ($data['questions'] as $question) {
             if (in_array($question['id'], $toAdd)) {
@@ -159,7 +149,6 @@ class SurveyController extends Controller
 
     private function saveImage($image){
         if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
-        // if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
             $image = substr($image, strpos($image, ',')+1);
             $type = strtolower($type[1]);
             if (!in_array($type, ['jpg', 'png', 'gif', 'jpeg'])) {
@@ -192,17 +181,23 @@ class SurveyController extends Controller
         }
         $validator = Validator::make($data,[
             'question' => 'required'|"string",
-            'type' => ['required', new Enum(QuestionTypeEnum::class)],
+            'type' => ['required', ([
+                // QuestionTypeEnum::Text->value,
+                // QuestionTypeEnum::Textarea->value,
+                // QuestionTypeEnum::Select->value,
+                // QuestionTypeEnum::Radio->value,
+                // QuestionTypeEnum::Checkbox->value,
+                ])],
             'description' => 'nullable|string',
             'data' => 'present',
             'survey_id' => 'exists:App\Models\Survey,id'
         ]);
-        return SurveyQuery::create($validator->validated());
+        return SurveyQuestion::create($validator->validated());
     }
 
     // updateQuestion
 
-    private function updateQuestion(SurveyQuery $question, $data){
+    private function updateQuestion(SurveyQuestion $question, $data){
         if (is_array($data['data'])) {
             $data['data'] = json_encode($data['data']);
         }

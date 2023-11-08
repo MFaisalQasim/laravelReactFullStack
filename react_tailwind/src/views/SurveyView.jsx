@@ -20,7 +20,7 @@ export default function SurveyView() {
     
     // const [error, setError] = useState({});
     const [error, setError] = useState({__html: ""});
-    // const [eachError, setEachError] = useState({__html: ""});
+    const [eachError, setEachError] = useState({__html: ""});
     const [expireDate,setExpireDate] = useState({__html: ""});    
 
     const onImageChose = (e) => {
@@ -51,24 +51,19 @@ export default function SurveyView() {
         console.log(res);
       })
       .catch(error => {        
-        // var eachError = [];
+        var eachError = [];
         var expireDate = '';
         const response = error.response;
         if (response && error.response.status === 422) {
-          // eachError = Object.values(response.data.errors).reduce((accum, next) => [...accum, ...next],[])
-          // expireDate = eachError[1];
-          // setError({__html: eachError.join('<br>')})
-          // setEachError({__html: eachError})
+          eachError = Object.values(response.data.errors).reduce((accum, next) => [...accum, ...next],[])
+          expireDate = eachError[1];
+          setError({__html: eachError.join('<br>')})
           setExpireDate({__html: expireDate})
-          // console.log(eachError);
-          // console.log(expireDate);
-
         }
         else{
           setError({__html: response.data.message})
-          // setEachError({__html: eachError})
-          // setExpireDate({__html: expireDate})
-          // console.log(eachError);
+          setExpireDate({__html: expireDate})
+          console.log(response);
         }
     })
     }
@@ -86,7 +81,7 @@ export default function SurveyView() {
     //   </TButton>
     // }
     >
-    <form method="Post" onSubmit={onSubmit} >
+    <form  action="#" method="Post" onSubmit={onSubmit} >
       <div className="shadow sm:overflow-hidden sm:rounded-md">
         <div className="space-y-6 bg-white px-4 py sm:p-6">
           {/* {error && (
@@ -180,15 +175,6 @@ export default function SurveyView() {
             }
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm-text-sm" />
           </div>
-          {/* {
-          // eachError.forEach(err => {
-            if (err.includes("expire date")) {
-              console.log(err.includes("expire date"));
-              console.log(err);
-             {err.__html && ( <div className="bg-red-500 rounded py-2 px-3 text-white"  dangerouslySetInnerHTML={error} ></div>)}
-            }
-            })
-          } */}
           {expireDate.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={expireDate} ></div>)}
 
           {/*Active*/}

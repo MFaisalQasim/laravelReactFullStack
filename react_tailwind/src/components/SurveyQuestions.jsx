@@ -6,18 +6,20 @@ import QuestionEditor from "./QuestionEditor";
 export default function SurveyQuestions({questions, onQuestionUpdate}) {
 
     const [surveyQuestions, setSurveyQuestions] = useState({...questions});
-    const addQuestion = () => {
+    const addQuestion = (index) => {
+        index = index !== undefined? index : surveyQuestions.length
+        surveyQuestions.questions.splice(index,0,
+            {
+                id: uuidv4(),
+                type: "text",
+                question: '',
+                description: '',
+                data: {}
+            })
         setSurveyQuestions({
             ...surveyQuestions,
             questions:[
                 ...surveyQuestions.questions,
-                {
-                    id: uuidv4(),
-                    type: "text",
-                    question: '',
-                    description: '',
-                    data: {}
-                }
             ]
         })
     }
@@ -42,12 +44,12 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
         });
     }
     useEffect(() => {
-        onQuestionUpdate(surveyQuestions)
+        setSurveyQuestions(surveyQuestions)
     },[surveyQuestions]);
 
   return (
     <>
-        <div className="flex justify-between">
+        <div className="flex justify-between p-5">
             <h3 className="text-2xl font-bold">Questions</h3>
             <button type="button"
                  onClick={() => addQuestion()}
