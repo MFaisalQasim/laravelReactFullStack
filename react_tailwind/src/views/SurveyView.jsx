@@ -20,7 +20,6 @@ export default function SurveyView() {
     
     // const [error, setError] = useState({});
     const [error, setError] = useState({__html: ""});
-    const [eachError, setEachError] = useState({__html: ""});
     const [expireDate,setExpireDate] = useState({__html: ""});    
 
     const onImageChose = (e) => {
@@ -48,9 +47,13 @@ export default function SurveyView() {
       delete payload.image_url;
       axiosClient.post('/survey',payload)
       .then((res) => {
+        setError({})
+        setExpireDate({})
         console.log(res);
       })
-      .catch(error => {        
+      .catch(error => {     
+        setError({})
+        setExpireDate({})   
         var eachError = [];
         var expireDate = '';
         const response = error.response;
@@ -68,8 +71,10 @@ export default function SurveyView() {
     })
     }
 
-    function onQuestionUpdate(survey) {
-      setSurvey({...survey})
+    function onQuestionUpdate(questions) {
+      setSurvey({
+        ...survey,
+        questions})
     }
 
   return (
@@ -209,7 +214,7 @@ export default function SurveyView() {
           </button> */}
         </div>
         <SurveyQuestions
-          questions={survey}
+          questions={survey.questions}
           onQuestionUpdate={onQuestionUpdate}
         />
         <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">

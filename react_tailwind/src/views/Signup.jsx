@@ -1,5 +1,4 @@
 import {useState } from "react";
-// import { Link } from "react-router-dom";
 import axiosClient from "../axios-client";
 import { useStateContext } from "../contexts/ContextProvider";
 
@@ -40,8 +39,6 @@ export default function Signup() {
       }
       else{
         setError({__html: error.response.data.message})
-        console.error(error.response.data);
-        console.error(error.response.data.message);
       }
     })
   }

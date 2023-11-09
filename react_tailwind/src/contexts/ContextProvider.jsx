@@ -1,4 +1,4 @@
-import { createContext,useContext,useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const StateContext = createContext({
     user: {},
@@ -185,12 +185,11 @@ export const ContextProvider = ({children}) => {
   // email: 'Muhammad@example.com',
   // imageUrl:
   //   'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    
-    const [user, setUser] = useState( {});
+
+    const [user, setUser] = useState({});
 
     // const [notification, _setNotification] = useState(localStorage.getItem('ACCESS_NOTIFICATION'));
     const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
-    // const [token, _setToken] = useState('ACCESS_TOKEN');
     const [survey, setSurvey] = useState(tmpSurveys);
     const [questionTypes] = useState(['text','select','radio', 'checkbox', 'textarea']);
 
@@ -201,15 +200,14 @@ export const ContextProvider = ({children}) => {
     //     }, 5000);
     // }
     const setToken = (token) => {
-
         _setToken(token)
         if (token) {
             localStorage.setItem('ACCESS_TOKEN', token);
         }else{
-            localStorage.removeItem("ACCESS_TOKEN")
+            localStorage.removeItem('ACCESS_TOKEN')
         }
     }
-    
+
     return(
         <StateContext.Provider value={
             {

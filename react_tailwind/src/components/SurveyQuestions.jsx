@@ -5,10 +5,10 @@ import QuestionEditor from "./QuestionEditor";
 
 export default function SurveyQuestions({questions, onQuestionUpdate}) {
 
-    const [surveyQuestions, setSurveyQuestions] = useState({...questions});
+    const [surveyQuestions, setSurveyQuestions] = useState([...questions]);
     const addQuestion = (index) => {
         index = index !== undefined? index : surveyQuestions.length
-        surveyQuestions.questions.splice(index,0,
+        surveyQuestions.splice(index,0,
             {
                 id: uuidv4(),
                 type: "text",
@@ -16,32 +16,24 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
                 description: '',
                 data: {}
             })
-        setSurveyQuestions({
-            ...surveyQuestions,
-            questions:[
-                ...surveyQuestions.questions,
-            ]
-        })
+        setSurveyQuestions([...surveyQuestions])
+        onQuestionUpdate(surveyQuestions)
     }
     const changeQuestion = (question) => {
         if (!question) return;
-        const newQuestions = surveyQuestions.questions.map((q)=> {
+        const newQuestions = surveyQuestions.map((q)=> {
             if (q.id == question.id) {
                 return {...question};
             }
             return q;
         });
-        setSurveyQuestions({
-            ...surveyQuestions,
-            questions: newQuestions
-        })
+        setSurveyQuestions(newQuestions)
+        onQuestionUpdate(surveyQuestions)
     }
     const deleteQuestion = (question) => {
-        const newQuestions = surveyQuestions.questions.filter((q) => q.id !== question.id);
-        setSurveyQuestions({
-            ...surveyQuestions,
-            questions: newQuestions
-        });
+        const newQuestions = surveyQuestions.filter((q) => q.id !== question.id);
+        setSurveyQuestions(newQuestions)
+        onQuestionUpdate(surveyQuestions)
     }
     useEffect(() => {
         setSurveyQuestions(surveyQuestions)
@@ -59,8 +51,8 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
             </button>
         </div>
             {
-            surveyQuestions.questions.length ?(
-                surveyQuestions.questions.map((q, ind) => (
+            surveyQuestions.length ?(
+                surveyQuestions.map((q, ind) => (
                     <QuestionEditor
                         key={q.id}
                         index={ind}

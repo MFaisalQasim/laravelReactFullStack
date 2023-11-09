@@ -55,10 +55,10 @@ class SurveyController extends Controller
         }
 
         $survey = Survey::create($data);
-        // foreach ($data['questions'] as $question) {
-        //     $question['survey_id'] = $survey->id;
-        //     $this->createQuestion($question);
-        // }
+        foreach ($data['questions'] as $question) {
+            $question['survey_id'] = $survey->id;
+            $this->createQuestion($question);
+        }
         return new SurveyResource($survey);
     }
 
@@ -181,13 +181,7 @@ class SurveyController extends Controller
         }
         $validator = Validator::make($data,[
             'question' => 'required'|"string",
-            'type' => ['required', ([
-                // QuestionTypeEnum::Text->value,
-                // QuestionTypeEnum::Textarea->value,
-                // QuestionTypeEnum::Select->value,
-                // QuestionTypeEnum::Radio->value,
-                // QuestionTypeEnum::Checkbox->value,
-                ])],
+            'type' => ['required',new Enum(QuestionTypeEnum::class)],
             'description' => 'nullable|string',
             'data' => 'present',
             'survey_id' => 'exists:App\Models\Survey,id'
