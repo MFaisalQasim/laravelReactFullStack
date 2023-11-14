@@ -26,10 +26,8 @@ export default function DefaultLayout() {
     axiosClient.get('/user')
     .then(({data}) => {
       setUser(data)
-      console.log(data);
     })
     .catch((err) => {
-      console.log(err);
       setToken(null)
     })
   }, [])

@@ -13,6 +13,7 @@ class Survey extends Model
     use HasSlug;
 
     protected $fillable = [
+        'survey_id' ,
         'user_id' ,
         'title' ,
         'image' ,

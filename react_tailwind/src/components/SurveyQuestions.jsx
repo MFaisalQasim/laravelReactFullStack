@@ -44,7 +44,7 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
         <div className="flex justify-between p-5">
             <h3 className="text-2xl font-bold">Questions</h3>
             <button type="button"
-                 onClick={() => addQuestion()}
+                onClick={() => addQuestion()}
                 className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700">
                 <PlusIcon className="w-4 mr-2"/>
                 Add Question

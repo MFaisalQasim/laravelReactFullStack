@@ -149,7 +149,6 @@ export default function SurveyView() {
                 >
                   Description
                 </label>
-                {/* <pre>{ JSON.stringify(survey, undefined, 2) }</pre> */}
                 <textarea
                   name="description"
                   id="description"
@@ -206,9 +205,6 @@ export default function SurveyView() {
                 </p>
             </div>           
           </div>
-
-
-
           {/* <button type="button" onClick={addQuestion} >
             Add question
           </button> */}

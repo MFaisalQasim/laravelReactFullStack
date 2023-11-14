@@ -26,8 +26,7 @@ class SurveyController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-
-        SurveyResource::collection(
+        return SurveyResource::collection(
             Survey::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10)
@@ -45,17 +44,39 @@ class SurveyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(StoreSurveyRequest $request)
+    // {
+    //     $data = $request->validated();
+
+    //     if (isset($data['image'])) {
+    //         $relativePath = $this->saveImage($data['image']);
+    //         $data['image'] = $relativePath;
+    //     }
+    //     $survey = Survey::create($data);
+    //     foreach ($data['questions'] as $question) {
+    //         $question['survey_id'] = $survey->id;
+    //         $this->createQuestion($question);
+    //     }
+    //     return new SurveyResource($survey);
+    // }
+
     public function store(StoreSurveyRequest $request)
     {
         $data = $request->validated();
-
+        return $data;
+        // Check if image was given and save on local file system
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);
             $data['image'] = $relativePath;
         }
 
         $survey = Survey::create($data);
+        // return $data['questions'][1];
+        // return $survey->id;
+        // return $data['questions'];
+        // Create new questions
         foreach ($data['questions'] as $question) {
+            // $question['id'] = $survey->id;
             $question['survey_id'] = $survey->id;
             $this->createQuestion($question);
         }
@@ -88,25 +109,20 @@ class SurveyController extends Controller
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
         $data = $request->validated();
-
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);
             $data['image'] = $relativePath;
-
             if ($survey->image) {
                 $absolutePath = public_path($survey->image);
                 file_delete($absolutePath);
             }
         }
 
-        // $survey = Survey::update($data);
         $survey->update($data);
 
         $existingIds = $survey->questions()->pluck('id')->toArray();
         $newIds  = Arr::pluck($data['questions'], 'id');
-
         $toDelete = array_diff($existingIds, $newIds);
-
         $toAdd = array_diff($newIds, $existingIds);
 
         SurveyQuestion::delete($toDelete);
@@ -117,7 +133,6 @@ class SurveyController extends Controller
                 $this->createQuestion($question);
             }
         }
-
         $toUpdate = collect($data['questions'])->keyBy('id');
         foreach ($survey->questions as $question) {
             if (isset($toUpdate[$question->id])) {
@@ -137,7 +152,6 @@ class SurveyController extends Controller
             return abort(403, "Unauthorized Action Request");
         }
         $survey->delete();
-
         if ($survey->image) {
             $absolutePath = public_path($survey->image);
             file_delete($absolutePath);
@@ -157,7 +171,7 @@ class SurveyController extends Controller
             $image = str_replace(' ', '+', $image);
             $image = base64_decode($image);
             if ($image == false) {
-                throw new \Exception("Image Decoded Failed");                
+                throw new \Exception("Image Decoded Failed");
             }
         } else {
             throw new \Exception("Invalid Image Data URI");
@@ -180,9 +194,9 @@ class SurveyController extends Controller
             $data['data'] = json_encode($data['data']);
         }
         $validator = Validator::make($data,[
-            'question' => 'required'|"string",
-            'type' => ['required',new Enum(QuestionTypeEnum::class)],
-            'description' => 'nullable|string',
+            'question' => 'required|string',
+            'type' => ['required', new Enum(QuestionTypeEnum::class)],
+            'description' => 'string',
             'data' => 'present',
             'survey_id' => 'exists:App\Models\Survey,id'
         ]);
