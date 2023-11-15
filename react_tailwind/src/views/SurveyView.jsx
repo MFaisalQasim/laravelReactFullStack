@@ -47,13 +47,13 @@ export default function SurveyView() {
       delete payload.image_url;
       axiosClient.post('/survey',payload)
       .then((res) => {
-        setError({})
-        setExpireDate({})
+        setError({__html: ""})
+        setExpireDate({__html: ""})
         console.log(res);
       })
       .catch(error => {     
-        setError({})
-        setExpireDate({})   
+        setError({__html: ""})
+        setExpireDate({__html: ""})   
         var eachError = [];
         var expireDate = '';
         const response = error.response;
@@ -62,6 +62,7 @@ export default function SurveyView() {
           expireDate = eachError[1];
           setError({__html: eachError.join('<br>')})
           setExpireDate({__html: expireDate})
+          console.log(response);
         }
         else{
           setError({__html: response.data.message})
@@ -95,7 +96,10 @@ export default function SurveyView() {
             })
             )
           } */}
+
+          {/* {error.__html != "" ? error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error} ></div>) : 'here'} */}
           {error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error} ></div>)}
+
           {/*Image*/}
           <div>
             <label htmlFor="" className="block text-sm-font-medium text-gray-700">

@@ -29,7 +29,7 @@ class SurveyController extends Controller
         return SurveyResource::collection(
             Survey::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
-            ->paginate(10)
+            ->paginate(2)
         );
     }
 
@@ -63,7 +63,6 @@ class SurveyController extends Controller
     public function store(StoreSurveyRequest $request)
     {
         $data = $request->validated();
-        return $data;
         // Check if image was given and save on local file system
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);
@@ -71,12 +70,8 @@ class SurveyController extends Controller
         }
 
         $survey = Survey::create($data);
-        // return $data['questions'][1];
-        // return $survey->id;
-        // return $data['questions'];
         // Create new questions
         foreach ($data['questions'] as $question) {
-            // $question['id'] = $survey->id;
             $question['survey_id'] = $survey->id;
             $this->createQuestion($question);
         }

@@ -4,10 +4,13 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import PageComponent from "../components/PageComponent";
 import SurveyListItem from "../components/SurveyListItem";
 import TButton from "../components/core/TButton";
+import PaginationLinks from "../components/PaginationLinks";
 
 export default function Survey() {
 
   const [survey, setSurvey] = useState([]);
+  const [pagination, setPagination] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const onDeleteClick = () => {
 
@@ -23,9 +26,13 @@ export default function Survey() {
   }
 
 useEffect(() => {
+  setLoading(true);
   axiosClient.get('/survey')
   .then(({data})=> {
     setSurvey(data.data);
+    setPagination(data.meta);
+    console.log(data);
+    setLoading(false);
   })
 }, [])
 
@@ -37,14 +44,21 @@ useEffect(() => {
         Create
       </TButton>
     ) } >
-      <h1>Survey Childerns</h1>
-      <div className="grid grid-cols-1 gap-5 sm:grid-col-2 md:grid-cols-3">
-        {survey.map((survey)=>(
-          <SurveyListItem survey={survey} key={survey.id}
-           onDeleteClick={onDeleteClick}
-          />
-        ))}
+      {loading && (
+      <div className='text-center text-lg' >Loading...</div>
+      )}
+      {!loading && (
+      <div>
+        <div className="grid grid-cols-1 gap-5 sm:grid-col-2 md:grid-cols-3">
+          {survey.map((survey)=>(
+            <SurveyListItem survey={survey} key={survey.id}
+            onDeleteClick={onDeleteClick}
+            />
+            ))}
+        </div>
+        <PaginationLinks meta={pagination} />
       </div>
+      )}
     </PageComponent>
     </>
   )
