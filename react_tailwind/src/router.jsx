@@ -9,6 +9,7 @@ import Dashboard from "./views/Dashboard";
 import UserForm from "./views/UserForm";
 import Survey from "./views/Survey";
 import SurveyView from "./views/SurveyView";
+import SurveyViewUpdate from "./views/SurveyViewUpdate";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             {
                 path: '/survey/create',
                 element:<SurveyView/>
+            },
+            {
+                path: '/survey/:slug',
+                element:<SurveyViewUpdate/>
             },
             {
                 path: '/users',

@@ -12,28 +12,34 @@ export default function Survey() {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const onDeleteClick = () => {
+  const onDeleteClick = (id) => {
 
-    console.log('Are Sure Want to Delete User?');
-    // if (!window.confirm('Are Sure Want to Delete User?')) {
-    //   return
-    // }
-    // axiosClient.delete(`/users/${u.id}`)
-    // .then(() => {
-    //   setNotification("User Deleted Sucessfully");
-    //   getUser();
-    // })
+    if (!window.confirm('Are Sure Want to Delete Survey?')) {
+      return
+    }
+    axiosClient.delete(`/survey/${id}`)
+    .then(() => {
+      console.log(id);
+      console.log('Survey Deleted Sucessfully');
+      // setNotification("Survey Deleted Sucessfully");
+      getSelectedSurveys(getSelectedSurveys.url)
+    })
+  }
+
+  function getSelectedSurveys(url){
+    url = url || '/survey';
+    axiosClient.get(url)
+    .then(({data})=> {
+      setSurvey(data.data);
+      setPagination(data.meta);
+      console.log(data);
+      setLoading(false);
+    })
   }
 
 useEffect(() => {
   setLoading(true);
-  axiosClient.get('/survey')
-  .then(({data})=> {
-    setSurvey(data.data);
-    setPagination(data.meta);
-    console.log(data);
-    setLoading(false);
-  })
+  getSelectedSurveys(getSelectedSurveys.url)
 }, [])
 
   return (
@@ -56,7 +62,7 @@ useEffect(() => {
             />
             ))}
         </div>
-        <PaginationLinks meta={pagination} />
+        <PaginationLinks meta={pagination} onChangePagitaion={getSelectedSurveys} />
       </div>
       )}
     </PageComponent>
