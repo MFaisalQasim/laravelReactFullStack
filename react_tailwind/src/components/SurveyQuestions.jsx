@@ -28,12 +28,12 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
             return q;
         });
         setSurveyQuestions(newQuestions)
-        onQuestionUpdate(surveyQuestions)
+        onQuestionUpdate(newQuestions)
     }
     const deleteQuestion = (question) => {
         const newQuestions = surveyQuestions.filter((q) => q.id !== question.id);
         setSurveyQuestions(newQuestions)
-        onQuestionUpdate(surveyQuestions)
+        onQuestionUpdate(newQuestions)
     }
     useEffect(() => {
         setSurveyQuestions(surveyQuestions)

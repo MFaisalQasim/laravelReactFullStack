@@ -19,8 +19,6 @@ export default function Survey() {
     }
     axiosClient.delete(`/survey/${id}`)
     .then(() => {
-      console.log(id);
-      console.log('Survey Deleted Sucessfully');
       // setNotification("Survey Deleted Sucessfully");
       getSelectedSurveys(getSelectedSurveys.url)
     })
@@ -32,6 +30,7 @@ export default function Survey() {
     .then(({data})=> {
       setSurvey(data.data);
       setPagination(data.meta);
+      console.log(data.meta);
       console.log(data);
       setLoading(false);
     })

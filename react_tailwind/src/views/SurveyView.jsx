@@ -47,6 +47,23 @@ export default function SurveyView() {
       delete payload.image_url;
       axiosClient.post('/survey',payload)
       .then((res) => {
+        setSurvey({
+          title : '',
+          slug : '',
+          status : false,
+          description : "",
+          image : null,
+          image_url : null,
+          expire_date : '',
+          questions : [],
+        })
+        // document.getElementById("survey-question").load()
+        // document.getElementById("#survey-question").load(window.location.href + " #survey-question" );
+        // var questions = [];
+        // updateQuestions(questions)
+        // setSurvey({
+        //   ...survey,
+        //   questions})
         setError({__html: ""})
         setExpireDate({__html: ""})
         console.log(res);
@@ -72,7 +89,7 @@ export default function SurveyView() {
     })
     }
 
-    function onQuestionUpdate(questions) {
+    function updateQuestions(questions) {
       setSurvey({
         ...survey,
         questions})
@@ -156,9 +173,9 @@ export default function SurveyView() {
                 <textarea
                   name="description"
                   id="description"
-                  value={survey.description || ""}
-                  onChange={(ev) =>
-                    setSurvey({ ...survey, description: ev.target.value })
+                  value={survey.description||""}
+                  onChange={(e) =>
+                    setSurvey({ ...survey, description: e.target.value })
                   }
                   placeholder="Describe your survey"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -213,10 +230,13 @@ export default function SurveyView() {
             Add question
           </button> */}
         </div>
-        <SurveyQuestions
+        <div>
+
+        <SurveyQuestions id='survey-question'
           questions={survey.questions}
-          onQuestionUpdate={onQuestionUpdate}
-        />
+          onQuestionUpdate={updateQuestions}
+          />
+        </div>
         <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
           <TButton>Save</TButton>
         </div>
