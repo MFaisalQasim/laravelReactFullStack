@@ -18,9 +18,13 @@ export default function Survey() {
       return
     }
     axiosClient.delete(`/survey/${id}`)
-    .then(() => {
+    .then(({data}) => {
+      console.log(data);
+      axiosClient.get('survey')
+      // window.
       // setNotification("Survey Deleted Sucessfully");
-      getSelectedSurveys(getSelectedSurveys.url)
+      // getSelectedSurveys(getSelectedSurveys.url)
+      // console.log(getSelectedSurveys.url);
     })
   }
 
@@ -30,8 +34,6 @@ export default function Survey() {
     .then(({data})=> {
       setSurvey(data.data);
       setPagination(data.meta);
-      console.log(data.meta);
-      console.log(data);
       setLoading(false);
     })
   }
@@ -57,7 +59,7 @@ useEffect(() => {
         <div className="grid grid-cols-1 gap-5 sm:grid-col-2 md:grid-cols-3">
           {survey.map((survey)=>(
             <SurveyListItem survey={survey} key={survey.id}
-            onDeleteClick={onDeleteClick}
+            onDelete={onDeleteClick}
             />
             ))}
         </div>

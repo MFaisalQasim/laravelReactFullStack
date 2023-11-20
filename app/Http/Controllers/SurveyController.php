@@ -142,10 +142,15 @@ class SurveyController extends Controller
      */
     public function destroy(Survey $survey, Request $request)
     {
+        // return $survey;
+        // return $request;
+        // return [$survey, $request];
         $user = $request->user();
         if ($user->id !== $survey->user_id) {
+            // return echo 'here 1';
             return abort(403, "Unauthorized Action Request");
         }
+        // return echo 'here 2';
         $survey->delete();
         if ($survey->image) {
             $absolutePath = public_path($survey->image);

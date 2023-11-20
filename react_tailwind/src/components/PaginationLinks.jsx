@@ -2,12 +2,10 @@ export default function PaginationLinks({meta, onChangePagitaion}) {
 
   function onClick(e, link){
     e.preventDefault();
-    console.log(link);
-    console.log(link.url);
     if(!link.url){
       return;
     }
-    onChangePagitaion(link)
+    onChangePagitaion(link.url)
   }
 
   return (
@@ -35,8 +33,9 @@ export default function PaginationLinks({meta, onChangePagitaion}) {
         </div>
         <div>
           <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-            {meta.links && meta.links.map((link, ind) => (
+            {meta && meta.links.map((link, ind) => (
                 <a
+                key={ind}
                 onClick={e => onClick(e, link)}
                 href={link.url}
                 aria-current="page"

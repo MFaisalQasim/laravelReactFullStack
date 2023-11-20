@@ -6,6 +6,7 @@ import QuestionEditor from "./QuestionEditor";
 export default function SurveyQuestions({questions, onQuestionUpdate}) {
 
     const [surveyQuestions, setSurveyQuestions] = useState([...questions]);
+    // document.getElementById("survey-question").innerHTML.reload
     const addQuestion = (index) => {
         index = index !== undefined? index : surveyQuestions.length
         surveyQuestions.splice(index,0,
@@ -41,7 +42,9 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
 
   return (
     <>
-        <div className="flex justify-between p-5">
+    <div id='survey-question'>
+    
+        <div className="flex justify-between p-5" >
             <h3 className="text-2xl font-bold">Questions</h3>
             <button type="button"
                 onClick={() => addQuestion()}
@@ -68,6 +71,7 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
                 <div className="text-gray-400 text-center py-4">You Have No Question Added</div>
             )
             }
+     </div>
     </>
   )
 }

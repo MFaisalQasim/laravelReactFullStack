@@ -39,6 +39,7 @@ export default function SurveyView() {
 
     const onSubmit = (e) => {
       e.preventDefault();
+      // document.getElementById("survey-question").load(window.location.href + "survey-question");
 
       const payload = { ...survey };
       if (payload.image) {
@@ -57,16 +58,16 @@ export default function SurveyView() {
           expire_date : '',
           questions : [],
         })
-        // document.getElementById("survey-question").load()
-        // document.getElementById("#survey-question").load(window.location.href + " #survey-question" );
         // var questions = [];
         // updateQuestions(questions)
         // setSurvey({
         //   ...survey,
         //   questions})
+        // document.getElementById("survey-question").innerHTML.reload
         setError({__html: ""})
         setExpireDate({__html: ""})
         console.log(res);
+        // console.log('questions' + questions);
       })
       .catch(error => {     
         setError({__html: ""})
@@ -82,9 +83,11 @@ export default function SurveyView() {
           console.log(response);
         }
         else{
-          setError({__html: response.data.message})
-          setExpireDate({__html: expireDate})
           console.log(response);
+          console.log(error);
+          // setError({__html: response.data.message})
+          // setExpireDate({__html: expireDate})
+          
         }
     })
     }
@@ -230,12 +233,11 @@ export default function SurveyView() {
             Add question
           </button> */}
         </div>
-        <div>
-
-        <SurveyQuestions id='survey-question'
-          questions={survey.questions}
-          onQuestionUpdate={updateQuestions}
-          />
+        <div >
+            <SurveyQuestions 
+            questions={survey.questions}
+            onQuestionUpdate={updateQuestions}
+            />
         </div>
         <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
           <TButton>Save</TButton>
