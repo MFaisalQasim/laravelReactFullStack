@@ -25,9 +25,9 @@ class SurveyResource extends JsonResource
             'user_id' => $this->user_id,
             'description' => $this->description,
             'image' => $this->image ? URL::to($this->image) : null,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'expire_date' => $this->expire_date,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'expire_date' => (new \DateTime($this->expire_date))->format('Y-m-d'),
             'questions' => SurveyQuestionResource::collection($this->questions),
         ];
     }

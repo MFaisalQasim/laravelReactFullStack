@@ -37,8 +37,8 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
         onQuestionUpdate(newQuestions)
     }
     useEffect(() => {
-        setSurveyQuestions(surveyQuestions)
-    },[surveyQuestions]);
+        setSurveyQuestions(questions)
+    },[questions]);
 
   return (
     <>

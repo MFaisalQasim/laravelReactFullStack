@@ -13,12 +13,14 @@ export default function PaginationLinks({meta, onChangePagitaion}) {
       <div className="flex flex-1 justify-between sm:hidden">
         <a
           href="#"
+          onClick={e => onClick(e, meta.links[0])}
           className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Previous
         </a>
         <a
           href="#"
+          onClick={e => onClick(e, meta.links[meta.links.length - 1])}
           className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Next

@@ -28,8 +28,9 @@ export default function Survey() {
     })
   }
 
-  function getSelectedSurveys(url){
-    url = url || '/survey';
+  function getSelectedSurveys(link){
+    let url;
+    url = link || '/survey';
     axiosClient.get(url)
     .then(({data})=> {
       setSurvey(data.data);

@@ -109,7 +109,7 @@ class SurveyController extends Controller
             $data['image'] = $relativePath;
             if ($survey->image) {
                 $absolutePath = public_path($survey->image);
-                file_delete($absolutePath);
+                File::delete($absolutePath);
             }
         }
 
@@ -120,7 +120,7 @@ class SurveyController extends Controller
         $toDelete = array_diff($existingIds, $newIds);
         $toAdd = array_diff($newIds, $existingIds);
 
-        SurveyQuestion::delete($toDelete);
+        SurveyQuestion::destroy($toDelete);
 
         foreach ($data['questions'] as $question) {
             if (in_array($question['id'], $toAdd)) {
@@ -129,11 +129,13 @@ class SurveyController extends Controller
             }
         }
         $toUpdate = collect($data['questions'])->keyBy('id');
+        // return $survey->questions;
         foreach ($survey->questions as $question) {
             if (isset($toUpdate[$question->id])) {
                 $this->updateQuestion($question, $toUpdate[$question->id]);
             }
         }
+        // return $survey;
         return new SurveyResource($survey);
     }
 
@@ -142,19 +144,14 @@ class SurveyController extends Controller
      */
     public function destroy(Survey $survey, Request $request)
     {
-        // return $survey;
-        // return $request;
-        // return [$survey, $request];
         $user = $request->user();
         if ($user->id !== $survey->user_id) {
-            // return echo 'here 1';
             return abort(403, "Unauthorized Action Request");
         }
-        // return echo 'here 2';
         $survey->delete();
         if ($survey->image) {
             $absolutePath = public_path($survey->image);
-            file_delete($absolutePath);
+            File::delete($absolutePath);
         }
         return response('', 204);
     }
@@ -190,8 +187,8 @@ class SurveyController extends Controller
     // createQuestion
 
     private function createQuestion($data){
-        if (is_array($data['data'])) {
-            $data['data'] = json_encode($data['data']);
+        if (is_array($data)) {
+            $data['data'] = json_encode($data);
         }
         $validator = Validator::make($data,[
             'question' => 'required|string',
@@ -206,16 +203,19 @@ class SurveyController extends Controller
     // updateQuestion
 
     private function updateQuestion(SurveyQuestion $question, $data){
-        if (is_array($data['data'])) {
-            $data['data'] = json_encode($data['data']);
+        // return $question;
+        // echo json_encode($data);
+        // return [$question, $data];
+        if (is_array($data)) {
+            $data['data'] = json_encode($data);
         }
         $validator = Validator::make($data,[
-            'question' => 'required'|"string",
+            'id' => 'exists:App\Models\SurveyQuestion,id',
+            'question' => 'required|string',
             'type' => ['required', new Enum(QuestionTypeEnum::class)],
             'description' => 'nullable|string',
             'data' => 'present',
-            'id' => 'exists:App\Models\SurveyQuestion,id'
         ]);
-        return $question::update($validator->validated());
+        return $question->update($validator->validated());
     }
 }
