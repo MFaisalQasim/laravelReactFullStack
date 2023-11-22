@@ -5,6 +5,7 @@ import TButton from "../components/core/TButton";
 import axiosClient from "../axios-client";
 import SurveyQuestions from "../components/SurveyQuestions";
 import { useNavigate, useParams } from "react-router-dom";
+import { useStateContext } from "../contexts/ContextProvider";
 
 export default function SurveyView() {
 
@@ -18,16 +19,15 @@ export default function SurveyView() {
         expire_date : '',
         questions : [],
     });
-    
+
     const [error, setError] = useState({__html: ""});
-    const [expireDate,setExpireDate] = useState({__html: ""});
-    
+    const [expireDate, setExpireDate] = useState({__html: ""});
     const {id} = useParams();
     const navigate = useNavigate();
-    const [dataLoading,setDataLoading] = useState(false);
+    const [dataLoading, setDataLoading] = useState(false);
+    const { showToast } = useStateContext();
 
     const onImageChose = (e) => {
-
       const file = e.target.files[0]
       const reader = new FileReader();
       reader.onload = () => {
@@ -43,7 +43,6 @@ export default function SurveyView() {
 
     const onSubmit = (e) => {
       e.preventDefault();
-
       const payload = { ...survey };
       if (payload.image) {
         payload.image = payload.image_url
@@ -52,12 +51,13 @@ export default function SurveyView() {
       let res = null;
       if (id) {        
         res = axiosClient.put(`/survey/${id}`,payload)
+        showToast("Survey updated successfully")
       }else{
         res = axiosClient.post(`/survey`,payload)
+        showToast("Survey created successfully")
       }
       res
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         navigate('/survey')
       })
       .catch(error => {
@@ -87,7 +87,7 @@ export default function SurveyView() {
       if (id) {
         axiosClient.get(`/survey/${id}`)
         .then(({data}) => {
-          console.log(data.data);
+          console.log(data);
           setSurvey(data.data)
         }).catch((err) => {
           console.log(err);
@@ -95,11 +95,10 @@ export default function SurveyView() {
       }
       setDataLoading(true)
     }, [])
-    
 
   return (
     <PageComponent title={!id? 'Create new Survey' : 'Update Survey'}>      
-      {!dataLoading 
+      {!dataLoading
       &&
       <div className='text-center text-lg' >Loading...</div>
       }
@@ -107,14 +106,6 @@ export default function SurveyView() {
       <form  action="#" method="Post" onSubmit={onSubmit} >
         <div className="shadow sm:overflow-hidden sm:rounded-md">
           <div className="space-y-6 bg-white px-4 py sm:p-6">
-            {/* {error && (
-              (error).forEach(err => {
-                    <div className="bg-red-500 text-white py-3 px-3">{err}</div>
-              })
-              )
-            } */}
-
-            {/* {error.__html != "" ? error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error} ></div>) : 'here'} */}
             {error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error} ></div>)}
 
             {/*Image*/}
@@ -184,7 +175,6 @@ export default function SurveyView() {
                 {/*Description*/}
 
             {/*Expire Date*/}
-
             <div className="col-span-6 sm:col-span-3">
               <label htmlFor="" className="block text-sm font-medium text-gray-">
                 Expire Date 

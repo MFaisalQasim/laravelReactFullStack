@@ -4,11 +4,9 @@ import { useStateContext } from "../contexts/ContextProvider";
 export default function GuestLayout() {
 
     const {token} = useStateContext();
-
     if (token) {
         return <Navigate to="/dashboard" />
     }
-
   return (
     <div>
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

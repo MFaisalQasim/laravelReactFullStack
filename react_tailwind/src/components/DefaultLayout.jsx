@@ -4,6 +4,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { NavLink, Navigate, Outlet } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider'
 import axiosClient from '../axios-client'
+import Toast from './Toast'
 
 const navigation = [
   { name: 'Dashboard', to: '/'},
@@ -14,7 +15,6 @@ const userNavigation = [
   { name: 'Settings', href: '#' },
   { name: 'Sign out'},
 ]
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -27,16 +27,11 @@ export default function DefaultLayout() {
     .then(({data}) => {
       setUser(data)
     })
-    .catch((err) => {
-      setToken(null)
-    })
-  }, [])
-
+  },[])
   if (!token) {
     return <Navigate to='login' />
   }
   const SignOut = () => {
-    console.log('Are Sure Want to Delete User?');
     axiosClient.post(`/logout`)
     .then(() => {
       setToken(null);
@@ -72,7 +67,6 @@ export default function DefaultLayout() {
                                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                               'rounded-md px-3 py-2 text-sm font-medium'
                             )}
-                            // aria-current={item.current ? 'page' : undefined}
                           >
                             {item.name}
                           </NavLink>
@@ -127,19 +121,6 @@ export default function DefaultLayout() {
                                 )}
                               </Menu.Item>
                             ))}
-                              {/* <Menu.Item key={item.name}
-                               >
-                                  <a                                
-                                    href={item.href}
-                                    onClick={item.name == "Sign out" ? onDelete : undefined}
-                                    className={classNames(
-                                      active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700'
-                                    )}
-                                  >
-                                    SignOut
-                                  </a>
-                              </Menu.Item> */}
                           </Menu.Items>
                         </Transition>
                       </Menu>
@@ -167,7 +148,7 @@ export default function DefaultLayout() {
                       key={item.name}
                       as="a"
                       to={item.to}
-                      className={({isActive}) =>  classNames(
+                      className={({isActive}) => classNames(
                         isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                         'block rounded-md px-3 py-2 text-base font-medium'
                       )}
@@ -214,6 +195,7 @@ export default function DefaultLayout() {
           )}
         </Disclosure>
         <Outlet/>
+        <Toast/>
       </div>
     </>
   )

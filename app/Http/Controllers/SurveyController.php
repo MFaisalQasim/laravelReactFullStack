@@ -29,7 +29,7 @@ class SurveyController extends Controller
         return SurveyResource::collection(
             Survey::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
-            ->paginate(2)
+            ->paginate(6)
         );
     }
 
@@ -44,22 +44,6 @@ class SurveyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(StoreSurveyRequest $request)
-    // {
-    //     $data = $request->validated();
-
-    //     if (isset($data['image'])) {
-    //         $relativePath = $this->saveImage($data['image']);
-    //         $data['image'] = $relativePath;
-    //     }
-    //     $survey = Survey::create($data);
-    //     foreach ($data['questions'] as $question) {
-    //         $question['survey_id'] = $survey->id;
-    //         $this->createQuestion($question);
-    //     }
-    //     return new SurveyResource($survey);
-    // }
-
     public function store(StoreSurveyRequest $request)
     {
         $data = $request->validated();
@@ -68,7 +52,6 @@ class SurveyController extends Controller
             $relativePath = $this->saveImage($data['image']);
             $data['image'] = $relativePath;
         }
-
         $survey = Survey::create($data);
         // Create new questions
         foreach ($data['questions'] as $question) {
@@ -129,13 +112,11 @@ class SurveyController extends Controller
             }
         }
         $toUpdate = collect($data['questions'])->keyBy('id');
-        // return $survey->questions;
         foreach ($survey->questions as $question) {
             if (isset($toUpdate[$question->id])) {
                 $this->updateQuestion($question, $toUpdate[$question->id]);
             }
         }
-        // return $survey;
         return new SurveyResource($survey);
     }
 
@@ -157,7 +138,6 @@ class SurveyController extends Controller
     }
 
     // saveImage
-
     private function saveImage($image){
         if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
             $image = substr($image, strpos($image, ',')+1);
@@ -185,10 +165,9 @@ class SurveyController extends Controller
     }
 
     // createQuestion
-
     private function createQuestion($data){
-        if (is_array($data)) {
-            $data['data'] = json_encode($data);
+        if (is_array($data['data'])) {
+            $data['data'] = json_encode($data['data']);
         }
         $validator = Validator::make($data,[
             'question' => 'required|string',
@@ -201,11 +180,7 @@ class SurveyController extends Controller
     }
 
     // updateQuestion
-
     private function updateQuestion(SurveyQuestion $question, $data){
-        // return $question;
-        // echo json_encode($data);
-        // return [$question, $data];
         if (is_array($data)) {
             $data['data'] = json_encode($data);
         }

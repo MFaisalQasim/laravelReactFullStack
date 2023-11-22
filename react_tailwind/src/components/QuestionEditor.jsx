@@ -77,6 +77,7 @@ export default function QuestionEditor({
           ></textarea>
       </div>
     </div>
+    {JSON.stringify(surveyQuestion)} 
     </>
   )
 }

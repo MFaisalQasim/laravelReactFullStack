@@ -5,29 +5,26 @@ import PageComponent from "../components/PageComponent";
 import SurveyListItem from "../components/SurveyListItem";
 import TButton from "../components/core/TButton";
 import PaginationLinks from "../components/PaginationLinks";
+import { useStateContext } from "../contexts/ContextProvider";
 
 export default function Survey() {
 
   const [survey, setSurvey] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);
+  const { showToast } = useStateContext();
 
   const onDeleteClick = (id) => {
-
     if (!window.confirm('Are Sure Want to Delete Survey?')) {
       return
     }
     axiosClient.delete(`/survey/${id}`)
-    .then(({data}) => {
-      console.log(data);
+    .then(() => {
       axiosClient.get('survey')
-      // window.
-      // setNotification("Survey Deleted Sucessfully");
-      // getSelectedSurveys(getSelectedSurveys.url)
-      // console.log(getSelectedSurveys.url);
+      getSelectedSurveys(getSelectedSurveys.url);
+      showToast('Survey is deleted');
     })
   }
-
   function getSelectedSurveys(link){
     let url;
     url = link || '/survey';
@@ -38,15 +35,14 @@ export default function Survey() {
       setLoading(false);
     })
   }
-
-useEffect(() => {
-  setLoading(true);
-  getSelectedSurveys(getSelectedSurveys.url)
-}, [])
+  useEffect(() => {
+    setLoading(true);
+    getSelectedSurveys(getSelectedSurveys.url)
+  }, [])
 
   return (
     <>
-    <PageComponent title="Survey" button={ (
+    <PageComponent title="Survey" button={(
       <TButton color="green" to="/survey/create" >
         <PlusCircleIcon className="h-6 w-6 mr-2" />
         Create
@@ -58,13 +54,19 @@ useEffect(() => {
       {!loading && (
       <div>
         <div className="grid grid-cols-1 gap-5 sm:grid-col-2 md:grid-cols-3">
+          {survey.length <= 0 &&
+            <div>You don`t have any survey created</div>
+          }
           {survey.map((survey)=>(
             <SurveyListItem survey={survey} key={survey.id}
             onDelete={onDeleteClick}
             />
-            ))}
+            ))
+          }
         </div>
-        <PaginationLinks meta={pagination} onChangePagitaion={getSelectedSurveys} />
+        {survey.length > 0 &&
+          <PaginationLinks meta={pagination} onChangePagitaion={getSelectedSurveys} />
+        }
       </div>
       )}
     </PageComponent>

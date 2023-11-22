@@ -6,7 +6,6 @@ import QuestionEditor from "./QuestionEditor";
 export default function SurveyQuestions({questions, onQuestionUpdate}) {
 
     const [surveyQuestions, setSurveyQuestions] = useState([...questions]);
-    // document.getElementById("survey-question").innerHTML.reload
     const addQuestion = (index) => {
         index = index !== undefined? index : surveyQuestions.length
         surveyQuestions.splice(index,0,
