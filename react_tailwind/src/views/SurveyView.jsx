@@ -19,7 +19,6 @@ export default function SurveyView() {
         expire_date : '',
         questions : [],
     });
-
     const [error, setError] = useState({__html: ""});
     const [expireDate, setExpireDate] = useState({__html: ""});
     const {id} = useParams();
@@ -40,7 +39,6 @@ export default function SurveyView() {
       };
       reader.readAsDataURL(file);
     }
-
     const onSubmit = (e) => {
       e.preventDefault();
       const payload = { ...survey };
@@ -76,7 +74,6 @@ export default function SurveyView() {
         }
     })
     }
-
     function updateQuestions(questions) {
       setSurvey({
         ...survey,
@@ -97,7 +94,7 @@ export default function SurveyView() {
     }, [])
 
   return (
-    <PageComponent title={!id? 'Create new Survey' : 'Update Survey'}>      
+    <PageComponent title={!id? 'Create new Survey' : 'Update Survey'}>
       {!dataLoading
       &&
       <div className='text-center text-lg' >Loading...</div>
@@ -216,6 +213,7 @@ export default function SurveyView() {
                   </p>
               </div>           
             </div>
+              {JSON.stringify(survey)} 
             {/* <button type="button" onClick={addQuestion} >
               Add question
             </button> */}

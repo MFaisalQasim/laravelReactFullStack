@@ -20,7 +20,6 @@ export default function Survey() {
     }
     axiosClient.delete(`/survey/${id}`)
     .then(() => {
-      axiosClient.get('survey')
       getSelectedSurveys(getSelectedSurveys.url);
       showToast('Survey is deleted');
     })

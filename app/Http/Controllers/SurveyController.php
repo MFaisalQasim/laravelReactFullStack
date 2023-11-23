@@ -181,8 +181,8 @@ class SurveyController extends Controller
 
     // updateQuestion
     private function updateQuestion(SurveyQuestion $question, $data){
-        if (is_array($data)) {
-            $data['data'] = json_encode($data);
+        if (is_array($data['data'])) {
+            $data['data'] = json_encode($data['data']);
         }
         $validator = Validator::make($data,[
             'id' => 'exists:App\Models\SurveyQuestion,id',

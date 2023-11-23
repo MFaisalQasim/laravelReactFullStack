@@ -35,42 +35,48 @@ export default function SurveyQuestions({questions, onQuestionUpdate}) {
         setSurveyQuestions(newQuestions)
         onQuestionUpdate(newQuestions)
     }
+    function updateOptions(options) {
+        setSurveyQuestions({
+          ...surveyQuestions,
+          options})
+      }
+
     useEffect(() => {
         setSurveyQuestions(questions)
     },[questions]);
 
   return (
     <>
-    <div id='survey-question'>
-    
         <div className="flex justify-between p-5" >
-            <h3 className="text-2xl font-bold">Questions</h3>
-            <button type="button"
-                onClick={() => addQuestion()}
-                className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700">
-                <PlusIcon className="w-4 mr-2"/>
-                Add Question
-            </button>
+        <h3 className="text-2xl font-bold">Questions</h3>
+        <button type="button"
+            onClick={() => addQuestion()}
+            className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700">
+            <PlusIcon className="w-4 mr-2"/>
+            Add Question
+        </button>
         </div>
-            {
-            surveyQuestions.length ?(
-                surveyQuestions.map((q, ind) => (
-                    <QuestionEditor
-                        key={q.id}
-                        index={ind}
-                        question={q}
-                        addQuestion={addQuestion}
-                        changeQuestion={changeQuestion}
-                        deleteQuestion={deleteQuestion}
-                    />
-                ))
-            )
-            :
-            (
-                <div className="text-gray-400 text-center py-4">You Have No Question Added</div>
-            )
-            }
-     </div>
+        {
+        surveyQuestions.length ?(
+            surveyQuestions.map((q, ind) => (
+                // key={q.id}
+                <QuestionEditor
+                index={ind}
+                question={q}
+                option={q.data}
+                addQuestion={addQuestion}
+                changeQuestion={changeQuestion}
+                deleteQuestion={deleteQuestion}
+                onOptionsUpdate={updateOptions}
+                />
+            ))
+        )
+        :
+        (
+            <div className="text-gray-400 text-center py-4">You Have No Question Added</div>
+        )
+        }
+    {JSON.stringify(surveyQuestions)} 
     </>
   )
 }
