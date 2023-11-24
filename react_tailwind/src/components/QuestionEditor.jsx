@@ -16,33 +16,32 @@ export default function QuestionEditor({
 
     const [surveyQuestion, setSurveyQuestion] = useState({...question });
     const {questionTypes} = useStateContext();
-    const [surveyOptions, setSurveyOptions] = useState({...option});
+    const [surveyOption, setSurveyOption] = useState({...option});
 
-    const addOptions = (index) => {
-      console.log(index);
-        index = index !== undefined? index : surveyOptions.length
-        surveyOptions.splice(index,0,
+    const addOptions = (ind) => {
+        ind = ind !== undefined? ind : surveyOption.length
+        surveyOption.splice(ind,0,
             {
                 id: uuidv4(),
-                option: '',
+                option: null,
             })
-        setSurveyOptions([...surveyOptions])
-        onOptionsUpdate(surveyOptions)
+        setSurveyOption(...surveyOption)
+        onOptionsUpdate(surveyOption)
     }
     // const changeOptions = (option) => {
     //     if (!option) return;
-    //     const newOptions = surveyOptions.map((q)=> {
+    //     const newOptions = surveyOption.map((q)=> {
     //         if (q.id == option.id) {
     //             return {...option};
     //         }
     //         return q;
     //     });
-    //     setSurveyOptions(newOptions)
+    //     setSurveyOption(newOptions)
     //     onOptionsUpdate(newOptions)
     // }
     // const deleteOptions = (option) => {
-    //     const newOptions = surveyOptions.filter((q) => q.id !== option.id);
-    //     setSurveyOptions(newOptions)
+    //     const newOptions = surveyOption.filter((q) => q.id !== option.id);
+    //     setSurveyOption(newOptions)
     //     onOptionsUpdate(newOptions)
     // }
 
@@ -101,7 +100,7 @@ export default function QuestionEditor({
             </select>
           </div>
       </div>
-      {/* {surveyOptions} */}
+      {/* {surveyOption} */}
       {/* {surveyQuestion.type != 'text' && surveyQuestion.data == []  && */}
         <div className="flex justify-between p-5" >
             <h3 className="text-2xl font-bold">Options</h3>
@@ -112,15 +111,15 @@ export default function QuestionEditor({
                 Add Options
             </button>
         </div>
-        {surveyOptions.length}
+        {surveyOption.length}
          {
-          surveyOptions.length ?(
-            surveyOptions.map((o, ind) => (
+          surveyOption.length ?(
+            surveyOption.map((o, ind) => (
               <div className="flex justify-between">
-                <h4 className="text-2xl font-bold" >{ind + 1}.{surveyQuestion.question}</h4>
+                <h4 className="text-2xl font-bold" >{ind + 1}.{surveyOption}</h4>
                 <br />
-                 <div className="flex gap-3 justify-between">
-                     <div className="flex justify-between">
+                <div className="flex gap-3 justify-between">
+                    <div className="flex justify-between">
                        <button type="button"
                           onClick={() => addOptions(ind+1)}
                           className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700  mr-2">
@@ -134,7 +133,7 @@ export default function QuestionEditor({
                           Delete
                       </button>
                     </div>
-                  <label htmlFor="questionType" className="block text-sm font-medium text-gray-700">{upperCaseFirst(surveyQuestion.type)}</label>                         
+                  <label htmlFor="questionType" className="block text-sm font-medium text-gray-700">{surveyOption}</label>                         
                 </div>
               </div>
             ))
@@ -155,7 +154,9 @@ export default function QuestionEditor({
         </div>
     </div>
     {JSON.stringify(surveyQuestion)}
-    {JSON.stringify(surveyOptions)}
+    <br />
+    {JSON.stringify(surveyOption)}
+    <br />
     </>
   )
 }

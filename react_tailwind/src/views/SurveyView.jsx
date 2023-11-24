@@ -47,7 +47,7 @@ export default function SurveyView() {
       }
       delete payload.image_url;
       let res = null;
-      if (id) {        
+      if (id) {
         res = axiosClient.put(`/survey/${id}`,payload)
         showToast("Survey updated successfully")
       }else{
@@ -70,7 +70,7 @@ export default function SurveyView() {
           console.log(response);
         }
         else{
-          console.log(error);        
+          console.log(error);
         }
     })
     }
@@ -104,7 +104,6 @@ export default function SurveyView() {
         <div className="shadow sm:overflow-hidden sm:rounded-md">
           <div className="space-y-6 bg-white px-4 py sm:p-6">
             {error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error} ></div>)}
-
             {/*Image*/}
             <div>
               <label htmlFor="" className="block text-sm-font-medium text-gray-700">
@@ -221,6 +220,7 @@ export default function SurveyView() {
           <div >
               <SurveyQuestions 
               questions={survey.questions}
+              // options={survey.questions.data}
               onQuestionUpdate={updateQuestions}
               />
           </div>
