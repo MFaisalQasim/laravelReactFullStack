@@ -36,11 +36,11 @@ export default function SurveyQuestions({questions, options, onQuestionUpdate}) 
         setSurveyQuestions(newQuestions)
         onQuestionUpdate(newQuestions)
     }
-    function updateOptions(data) {
-        setSurveyQuestions({
-          ...surveyQuestions,
-          data})
-      }
+    // function updateOptions(data) {
+    //     setSurveyQuestions({
+    //       ...surveyQuestions,
+    //       data})
+    //   }
 
     useEffect(() => {
         setSurveyQuestions(questions)
@@ -63,7 +63,7 @@ export default function SurveyQuestions({questions, options, onQuestionUpdate}) 
                 <QuestionEditor
                     index={ind}
                     question={q}
-                    option={q.data}
+                    // option={q.data}
                     addQuestion={addQuestion}
                     changeQuestion={changeQuestion}
                     deleteQuestion={deleteQuestion}

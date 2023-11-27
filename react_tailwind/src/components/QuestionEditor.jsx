@@ -11,22 +11,21 @@ export default function QuestionEditor({
   addQuestion,
   changeQuestion,
   deleteQuestion,
-  onOptionsUpdate
+  // onOptionsUpdate
 }) {
 
     const [surveyQuestion, setSurveyQuestion] = useState({...question });
     const {questionTypes} = useStateContext();
-    const [surveyOption, setSurveyOption] = useState({...option});
+    // const [surveyOption, setSurveyOption] = useState({...option});
 
     const addOptions = (ind) => {
-        ind = ind !== undefined? ind : surveyOption.length
-        surveyOption.splice(ind,0,
-            {
-                id: uuidv4(),
-                option: null,
-            })
-        setSurveyOption(...surveyOption)
-        onOptionsUpdate(surveyOption)
+        // ind = ind !== undefined? ind : surveyQuestion.data.length
+        console.log(surveyQuestion.data)
+        surveyQuestion.data.options.push({
+          uuid: uuidv4(), text: ''
+        })
+        setSurveyQuestion({...surveyQuestion})
+        // onOptionsUpdate(surveyQuestion)
     }
     // const changeOptions = (option) => {
     //     if (!option) return;
@@ -39,11 +38,15 @@ export default function QuestionEditor({
     //     setSurveyOption(newOptions)
     //     onOptionsUpdate(newOptions)
     // }
-    // const deleteOptions = (option) => {
-    //     const newOptions = surveyOption.filter((q) => q.id !== option.id);
-    //     setSurveyOption(newOptions)
-    //     onOptionsUpdate(newOptions)
-    // }
+    const deleteOptions = (option) => {
+        const data = surveyQuestion.data.options.filter((q) => q.uuid !== option.uuid);
+        setSurveyQuestion({...surveyQuestion,
+          data
+        })
+        console.log(data)
+        console.log(surveyQuestion)
+        // onOptionsUpdate(newOptions)
+    }
 
     useEffect(() => {
       changeQuestion(surveyQuestion);
@@ -51,6 +54,23 @@ export default function QuestionEditor({
 
     function upperCaseFirst(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function ShouldHaveOptions(type =null) {
+      type = type || surveyQuestion.type
+      return ['select', 'radio', 'checkbox'].includes(type)
+    }
+
+    function onTypeChange(e) {
+      const newSurvey = {...surveyQuestion, type: e.target.value}
+      if(ShouldHaveOptions){
+        newSurvey.data = {
+          options: [
+            {uuid: uuidv4(), text: ''}
+          ]
+        }
+      }
+      setSurveyQuestion(newSurvey)
     }
 
   return (
@@ -90,7 +110,7 @@ export default function QuestionEditor({
             <label htmlFor="questionType" className="block text-sm font-medium text-gray-700">Question Type</label>
             <select name="questionType" id="questionType"
               value={surveyQuestion.type}
-              onChange={(e)=> setSurveyQuestion({...surveyQuestion, type: e.target.value})}
+              onChange={onTypeChange}
               className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
               {questionTypes.map((type) => (
                 <option value={type} key={type}>
@@ -100,8 +120,8 @@ export default function QuestionEditor({
             </select>
           </div>
       </div>
-      {/* {surveyOption} */}
-      {/* {surveyQuestion.type != 'text' && surveyQuestion.data == []  && */}
+      {ShouldHaveOptions() && 
+      <>
         <div className="flex justify-between p-5" >
             <h3 className="text-2xl font-bold">Options</h3>
             <button type="button"
@@ -111,39 +131,45 @@ export default function QuestionEditor({
                 Add Options
             </button>
         </div>
-        {surveyOption.length}
-         {
-          surveyOption.length ?(
-            surveyOption.map((o, ind) => (
-              <div className="flex justify-between">
-                <h4 className="text-2xl font-bold" >{ind + 1}.{surveyOption}</h4>
-                <br />
-                <div className="flex gap-3 justify-between">
-                    <div className="flex justify-between">
-                       <button type="button"
-                          onClick={() => addOptions(ind+1)}
-                          className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700  mr-2">
-                          <PlusIcon className="w-4" />
-                          Add
-                      </button>
-                      <button type="button"
-                          onClick={() => deleteOptions(o)}
-                          className="flex items-center text-sm py-1 px-4 rounded-sm text-red border border-red-300  hover:border-red-700">
-                          <TrashIcon className="w-4 mr-2" />
-                          Delete
-                      </button>
-                    </div>
-                  <label htmlFor="questionType" className="block text-sm font-medium text-gray-700">{surveyOption}</label>                         
-                </div>
-              </div>
-            ))
-          )
-          :
+        {/* {surveyQuestion.data.options} */}
+        {
+          // surveyQuestion.data.options.length > 0(
+          //   surveyQuestion.data.options.map((o, ind) => (
+          //     <>
+          //     <div className="flex justify-between">
+          //       <div className="flex justify-between">
+          //       <h4 className="text-2xl font-bold" >{ind + 1}.{o.text}</h4>
+          //       <br />
+          //       </div>
+          //           <div className="flex justify-between w-full pl-2 pr-2">
+          //             <input className="w-full" value={o.text}/>
+          //           </div>
+          //           <div className="flex justify-between">
+          //              {/* <button type="button"
+          //                 onClick={() => addOptions(ind+1)}
+          //                 className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700  mr-2">
+          //                 <PlusIcon className="w-4" />
+          //                 Add
+          //             </button> */}
+          //             <button type="button"
+          //                 onClick={() => deleteOptions(o)}
+          //                 className="flex items-center text-sm py-1 px-4 rounded-sm text-red border border-red-300  hover:border-red-700">
+          //                 <TrashIcon className="w-4 mr-2" />
+          //                 Delete
+          //             </button>
+          //           </div>
+          //     </div>
+          //     </>
+          //   ))
+          // )
+        }
+        {/* {surveyQuestion.data.options.length === 0 &&
           (
               <div className="text-gray-400 text-center py-4">You Have No Options Added</div>
           )
-        }
-        {/* } */}
+        } */}
+        </>
+      }
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
           <textarea name="description" id="description" cols="30" rows="10"
@@ -153,10 +179,8 @@ export default function QuestionEditor({
             ></textarea>
         </div>
     </div>
-    {JSON.stringify(surveyQuestion)}
+    {JSON.stringify(typeof(surveyQuestion.data))}
     <br />
-    {JSON.stringify(surveyOption)}
-    <br />
-    </>
+    </> 
   )
 }
