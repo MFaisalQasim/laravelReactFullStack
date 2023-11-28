@@ -19,7 +19,7 @@ export default function QuestionEditor({
     // const [surveyOption, setSurveyOption] = useState({...option});
 
     const addOptions = (ind) => {
-        // ind = ind !== undefined? ind : surveyQuestion.data.length
+        ind = ind !== undefined? ind : surveyQuestion.data.length
         console.log(surveyQuestion.data)
         surveyQuestion.data.options.push({
           uuid: uuidv4(), text: ''
@@ -39,11 +39,24 @@ export default function QuestionEditor({
     //     onOptionsUpdate(newOptions)
     // }
     const deleteOptions = (option) => {
-        const data = surveyQuestion.data.options.filter((q) => q.uuid !== option.uuid);
+      console.log(option);
+        const options = surveyQuestion.data.options.filter((q) => q.uuid !== option.uuid);
+        console.log(options)
+        // console.log({...surveyQuestion.data,
+        //   options})
+          // console.log({...surveyQuestion.data})
+          // console.log({options})
+        // setSurveyQuestion({...surveyQuestion.data,
+        //   options}
+        // )
+          const data = {
+            options
+          }
+          console.log({...surveyQuestion,
+            data})
         setSurveyQuestion({...surveyQuestion,
-          data
-        })
-        console.log(data)
+          data}
+        )
         console.log(surveyQuestion)
         // onOptionsUpdate(newOptions)
     }
@@ -56,20 +69,25 @@ export default function QuestionEditor({
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    function ShouldHaveOptions(type =null) {
+    function shouldHaveOptions(type =null) {
       type = type || surveyQuestion.type
       return ['select', 'radio', 'checkbox'].includes(type)
     }
 
     function onTypeChange(e) {
       const newSurvey = {...surveyQuestion, type: e.target.value}
-      if(ShouldHaveOptions){
-        newSurvey.data = {
-          options: [
-            {uuid: uuidv4(), text: ''}
-          ]
+      if(!shouldHaveOptions(surveyQuestion.type) && shouldHaveOptions(e.target.value)){
+        if (!newSurvey.data.options) {
+          newSurvey.data = {
+            options: [
+              {uuid: uuidv4(), text: ''}
+            ]
+          }
         }
       }
+      // else if(shouldHaveOptions(surveyQuestion.type) && !shouldHaveOptions(e.target.value)) {
+      //   newSurvey.data = {}
+      // }
       setSurveyQuestion(newSurvey)
     }
 
@@ -120,7 +138,7 @@ export default function QuestionEditor({
             </select>
           </div>
       </div>
-      {ShouldHaveOptions() && 
+      {shouldHaveOptions() && 
       <>
         <div className="flex justify-between p-5" >
             <h3 className="text-2xl font-bold">Options</h3>
@@ -131,43 +149,50 @@ export default function QuestionEditor({
                 Add Options
             </button>
         </div>
-        {/* {surveyQuestion.data.options} */}
         {
-          // surveyQuestion.data.options.length > 0(
-          //   surveyQuestion.data.options.map((o, ind) => (
-          //     <>
-          //     <div className="flex justify-between">
-          //       <div className="flex justify-between">
-          //       <h4 className="text-2xl font-bold" >{ind + 1}.{o.text}</h4>
-          //       <br />
-          //       </div>
-          //           <div className="flex justify-between w-full pl-2 pr-2">
-          //             <input className="w-full" value={o.text}/>
-          //           </div>
-          //           <div className="flex justify-between">
-          //              {/* <button type="button"
-          //                 onClick={() => addOptions(ind+1)}
-          //                 className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700  mr-2">
-          //                 <PlusIcon className="w-4" />
-          //                 Add
-          //             </button> */}
-          //             <button type="button"
-          //                 onClick={() => deleteOptions(o)}
-          //                 className="flex items-center text-sm py-1 px-4 rounded-sm text-red border border-red-300  hover:border-red-700">
-          //                 <TrashIcon className="w-4 mr-2" />
-          //                 Delete
-          //             </button>
-          //           </div>
-          //     </div>
-          //     </>
-          //   ))
-          // )
-        }
-        {/* {surveyQuestion.data.options.length === 0 &&
-          (
-              <div className="text-gray-400 text-center py-4">You Have No Options Added</div>
+            // surveyQuestion.data.options !== null && (
+            surveyQuestion.data.options.length > 0 && (
+            surveyQuestion.data.options.map((o, ind) => (
+              <>
+              <div className="flex justify-between">
+                <div className="flex justify-between">
+                <h4 className="text-2xl font-bold" >{ind + 1}.{o.text}</h4>
+                <br />
+                </div>
+                    <div className="flex justify-between w-full pl-2 pr-2">
+                      <input className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm w-full"
+                      //  value={(e) => setSurveyQuestion({...surveyQuestion.data.options[ind], text: e.target.value })}
+                       onInput={(e) => {o.text = e.target.value; setSurveyQuestion({...surveyQuestion}) }}
+                       value={o.text}
+                       />
+                    </div>
+                    <div className="flex justify-between">
+                       <button type="button"
+                          // onClick={() => addOptions(ind+1)}
+                          onClick={() => addOptions()}
+                          className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700 mt-1 mr-2">
+                          <PlusIcon className="w-4" />
+                          Add
+                      </button>
+                      <button type="button"
+                          onClick={() => deleteOptions(o)}
+                          className="flex items-center text-sm py-1 px-4 rounded-sm text-red border border-red-300  hover:border-red-700 mt-1">
+                          <TrashIcon className="w-4 mr-2" />
+                          Delete
+                      </button>
+                    </div>
+              </div>
+              </>
+            ))
           )
-        } */}
+        }
+        {surveyQuestion.data.options.length === 0   &&
+          (
+            <>
+              <div className="text-gray-400 text-center py-4">You Have No Options Added</div>
+            </>
+          )
+        }
         </>
       }
         <div>
@@ -180,6 +205,7 @@ export default function QuestionEditor({
         </div>
     </div>
     {JSON.stringify(typeof(surveyQuestion.data))}
+    {JSON.stringify((surveyQuestion.data))}
     <br />
     </> 
   )
