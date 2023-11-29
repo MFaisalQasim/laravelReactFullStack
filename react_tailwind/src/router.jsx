@@ -9,6 +9,7 @@ import Dashboard from "./views/Dashboard";
 import UserForm from "./views/UserForm";
 import Survey from "./views/Survey";
 import SurveyView from "./views/SurveyView";
+import SurveySubmitView from "./views/SurveySubmitView";
 
 const router = createBrowserRouter([
     {
@@ -64,8 +65,12 @@ const router = createBrowserRouter([
         ]
     },
     {
+        path: '/survey/view/:slug',
+        element:<SurveySubmitView/>
+    },
+    {
         path: '*',
         element:<NotFound />
-    },
+    }
 ])
 export default router;

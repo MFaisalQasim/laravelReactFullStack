@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateSurveyRequest;
 use App\Models\SurveyAnswer;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyQuestionAnswer;
+use DateTime;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -135,6 +136,18 @@ class SurveyController extends Controller
             File::delete($absolutePath);
         }
         return response('', 204);
+    }
+
+    public function getBySlug(Survey $survey){
+        if(!$survey->status){
+            return response("", 404);
+        }
+        $currentDate = new DateTime();
+        $expireDate = new DateTime($survey->expire_date);
+        if($currentDate > $expireDate){
+            return response("", 404);
+        }
+        return new SurveyResource($survey);
     }
 
     // saveImage

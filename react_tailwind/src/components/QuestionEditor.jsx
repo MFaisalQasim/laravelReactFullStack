@@ -3,77 +3,47 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { v4 as uuidv4 } from "uuid";
 
-// key = question.id,
 export default function QuestionEditor({
   index = 0,
   question,
-  option,
   addQuestion,
   changeQuestion,
   deleteQuestion,
-  // onOptionsUpdate
 }) {
 
     const [surveyQuestion, setSurveyQuestion] = useState({...question });
     const {questionTypes} = useStateContext();
-    // const [surveyOption, setSurveyOption] = useState({...option});
-
-    const addOptions = (ind) => {
-        ind = ind !== undefined? ind : surveyQuestion.data.length
+    const addOptions = () => {
+        // ind = ind !== undefined? ind : surveyQuestion.data.length
         console.log(surveyQuestion.data)
         surveyQuestion.data.options.push({
           uuid: uuidv4(), text: ''
         })
         setSurveyQuestion({...surveyQuestion})
-        // onOptionsUpdate(surveyQuestion)
     }
-    // const changeOptions = (option) => {
-    //     if (!option) return;
-    //     const newOptions = surveyOption.map((q)=> {
-    //         if (q.id == option.id) {
-    //             return {...option};
-    //         }
-    //         return q;
-    //     });
-    //     setSurveyOption(newOptions)
-    //     onOptionsUpdate(newOptions)
-    // }
     const deleteOptions = (option) => {
       console.log(option);
         const options = surveyQuestion.data.options.filter((q) => q.uuid !== option.uuid);
-        console.log(options)
-        // console.log({...surveyQuestion.data,
-        //   options})
-          // console.log({...surveyQuestion.data})
-          // console.log({options})
-        // setSurveyQuestion({...surveyQuestion.data,
-        //   options}
-        // )
           const data = {
             options
           }
-          console.log({...surveyQuestion,
-            data})
         setSurveyQuestion({...surveyQuestion,
           data}
         )
         console.log(surveyQuestion)
-        // onOptionsUpdate(newOptions)
     }
 
     useEffect(() => {
       changeQuestion(surveyQuestion);
-    }, [surveyQuestion]);
+    }, [surveyQuestion])
 
     function upperCaseFirst(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
-
     function shouldHaveOptions(type =null) {
       type = type || surveyQuestion.type
       return ['select', 'radio', 'checkbox'].includes(type)
     }
-
     function onTypeChange(e) {
       const newSurvey = {...surveyQuestion, type: e.target.value}
       if(!shouldHaveOptions(surveyQuestion.type) && shouldHaveOptions(e.target.value)){
@@ -149,26 +119,22 @@ export default function QuestionEditor({
                 Add Options
             </button>
         </div>
-        {
-            // surveyQuestion.data.options !== null && (
-            surveyQuestion.data.options.length > 0 && (
+        {surveyQuestion.data.options.length > 0 && (
             surveyQuestion.data.options.map((o, ind) => (
               <>
               <div className="flex justify-between">
                 <div className="flex justify-between">
-                <h4 className="text-2xl font-bold" >{ind + 1}.{o.text}</h4>
+                <h4 className="text-2xl font-bold" >{ind + 1}</h4>
                 <br />
                 </div>
                     <div className="flex justify-between w-full pl-2 pr-2">
                       <input className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm w-full"
-                      //  value={(e) => setSurveyQuestion({...surveyQuestion.data.options[ind], text: e.target.value })}
                        onInput={(e) => {o.text = e.target.value; setSurveyQuestion({...surveyQuestion}) }}
                        value={o.text}
                        />
                     </div>
                     <div className="flex justify-between">
                        <button type="button"
-                          // onClick={() => addOptions(ind+1)}
                           onClick={() => addOptions()}
                           className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700 mt-1 mr-2">
                           <PlusIcon className="w-4" />
@@ -204,9 +170,6 @@ export default function QuestionEditor({
             ></textarea>
         </div>
     </div>
-    {JSON.stringify(typeof(surveyQuestion.data))}
-    {JSON.stringify((surveyQuestion.data))}
-    <br />
     </> 
   )
 }

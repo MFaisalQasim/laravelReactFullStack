@@ -8,20 +8,15 @@ export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const {setNotification} = useStateContext();
-
   useEffect(() => {
     getUser();
   }, [])
-
   const onDelete = u => {
-
     if (!window.confirm('Are Sure Want to Delete User?')) {
       return
     }
-
     axiosClient.delete(`/users/${u.id}`)
     .then(() => {
-      
       setNotification("User Deleted Sucessfully");
       getUser();
     })
@@ -32,7 +27,6 @@ export default function Users() {
     axiosClient.get('/users')
     .then(({data}) => {
       setLoading(false)
-      // console.log(data.data);
       setUsers(data.data)
     })
     .catch(() => {
@@ -49,7 +43,7 @@ export default function Users() {
         <div className="card animated fadeInDown">
           <table>
             <thead>
-              <tr>                
+              <tr>
                 <th>Id</th>
                 <th>Name</th>
                 <th>Email</th>

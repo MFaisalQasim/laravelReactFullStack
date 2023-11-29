@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import QuestionEditor from "./QuestionEditor";
 
-export default function SurveyQuestions({questions, options, onQuestionUpdate}) {
+export default function SurveyQuestions({questions, onQuestionUpdate}) {
 
     const [surveyQuestions, setSurveyQuestions] = useState([...questions]);
-    // const [surveyOptions, setSurveyOptions] = useState({...options});
     const addQuestion = (index) => {
         index = index !== undefined? index : surveyQuestions.length
         surveyQuestions.splice(index,0,
@@ -36,12 +35,6 @@ export default function SurveyQuestions({questions, options, onQuestionUpdate}) 
         setSurveyQuestions(newQuestions)
         onQuestionUpdate(newQuestions)
     }
-    // function updateOptions(data) {
-    //     setSurveyQuestions({
-    //       ...surveyQuestions,
-    //       data})
-    //   }
-
     useEffect(() => {
         setSurveyQuestions(questions)
     },[questions]);
@@ -60,15 +53,15 @@ export default function SurveyQuestions({questions, options, onQuestionUpdate}) 
         {
         surveyQuestions.length ?(
             surveyQuestions.map((q, ind) => (
-                <QuestionEditor
-                    index={ind}
-                    question={q}
-                    // option={q.data}
-                    addQuestion={addQuestion}
-                    changeQuestion={changeQuestion}
-                    deleteQuestion={deleteQuestion}
-                    // onOptionsUpdate={updateOptions}
-                />
+                <>
+                    <QuestionEditor
+                        index={ind}
+                        question={q}
+                        addQuestion={addQuestion}
+                        changeQuestion={changeQuestion}
+                        deleteQuestion={deleteQuestion}
+                    />
+                </>
             ))
         )
         :
@@ -76,7 +69,6 @@ export default function SurveyQuestions({questions, options, onQuestionUpdate}) 
             <div className="text-gray-400 text-center py-4">You Have No Question Added</div>
         )
         }
-    {JSON.stringify(surveyQuestions)}
     </>
   )
 }

@@ -13,7 +13,6 @@ export default function Survey() {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);
   const { showToast } = useStateContext();
-
   const onDeleteClick = (id) => {
     if (!window.confirm('Are Sure Want to Delete Survey?')) {
       return

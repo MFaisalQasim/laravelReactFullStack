@@ -14,25 +14,20 @@ export default function Users() {
   }, [])
 
   const onDelete = u => {
-
     if (!window.confirm('Are Sure Want to Delete User?')) {
       return
     }
-
     axiosClient.delete(`/users/${u.id}`)
     .then(() => {
-      
       setNotification("User Deleted Sucessfully");
       getUser();
     })
   }
-
   const getUser = () => {
     setLoading(true);
     axiosClient.get('/users')
     .then(({data}) => {
       setLoading(false)
-      // console.log(data.data);
       setUsers(data.data)
     })
     .catch(() => {

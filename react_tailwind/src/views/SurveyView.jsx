@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import PageComponent from "../components/PageComponent";
-import {PhotoIcon } from "@heroicons/react/24/outline";
+import {LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
 import TButton from "../components/core/TButton";
 import axiosClient from "../axios-client";
 import SurveyQuestions from "../components/SurveyQuestions";
@@ -18,29 +18,28 @@ export default function SurveyView() {
         image_url : null,
         expire_date : '',
         questions : [],
-    });
-    const [error, setError] = useState({__html: ""});
-    const [expireDate, setExpireDate] = useState({__html: ""});
-    const {id} = useParams();
-    const navigate = useNavigate();
-    const [dataLoading, setDataLoading] = useState(false);
-    const { showToast } = useStateContext();
-
+    })
+    const [error, setError] = useState({__html: ""})
+    const [expireDate, setExpireDate] = useState({__html: ""})
+    const {id} = useParams()
+    const navigate = useNavigate()
+    const [dataLoading, setDataLoading] = useState(false)
+    const { showToast } = useStateContext()
     const onImageChose = (e) => {
       const file = e.target.files[0]
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = () => {
         setSurvey({
           ...survey,
           image: file,
           image_url: reader.result,
-        });
+        })
         e.target.value = "";
-      };
-      reader.readAsDataURL(file);
+      }
+      reader.readAsDataURL(file)
     }
     const onSubmit = (e) => {
-      e.preventDefault();
+      e.preventDefault()
       const payload = { ...survey };
       if (payload.image) {
         payload.image = payload.image_url
@@ -67,10 +66,9 @@ export default function SurveyView() {
           expireDate = eachError[1];
           setError({__html: eachError.join('<br>')})
           setExpireDate({__html: expireDate})
-          console.log(response);
         }
         else{
-          console.log(error);
+          console.log(error)
         }
     })
     }
@@ -79,22 +77,50 @@ export default function SurveyView() {
         ...survey,
         questions})
     }
-
     useEffect(() => {
       if (id) {
         axiosClient.get(`/survey/${id}`)
         .then(({data}) => {
-          console.log(data);
+          console.log(data)
           setSurvey(data.data)
         }).catch((err) => {
-          console.log(err);
-        });
+          console.log(err)
+        })
       }
       setDataLoading(true)
     }, [])
 
+    const deleteSurvey = (survey)=> {
+      if (!window.confirm('Are Sure Want to Delete Survey?')) {
+        return
+      }
+      axiosClient.delete(`/survey/${survey.id}`)
+      .then(() => {
+        navigate('/survey')
+        showToast('Survey is deleted')
+      })
+    }
+
   return (
-    <PageComponent title={!id? 'Create new Survey' : 'Update Survey'}>
+    <PageComponent 
+    title={!id? 'Create new Survey' : 'Update Survey'}
+    button={
+    <div className="flex justify-between">
+      <button type="button"
+          href={`survey/public/${survey.slug}`}
+          className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700  mr-2">
+          <LinkIcon className="w-4" />
+          Public Survey View
+      </button>
+      <button type="button"
+          onClick={() => deleteSurvey(survey)}
+          className="flex items-center text-sm py-1 px-4 rounded-sm text-red border border-red-300  hover:border-red-700">
+          <TrashIcon className="w-4 mr-2" />
+          Delete
+      </button>
+    </div>
+    }
+    >
       {!dataLoading
       &&
       <div className='text-center text-lg' >Loading...</div>
@@ -132,7 +158,6 @@ export default function SurveyView() {
               </div>
             </div>
             {/*Image*/}
-
             {/*Title*/}
             <div className="col-soan-6 sm:col-span-3">
               <label htmlFor="" className="block text-sm font-medium text-gray-700">
@@ -148,7 +173,6 @@ export default function SurveyView() {
               placeholder="Survey Title"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
             </div>
-            
                 {/*Description*/}
                 <div className="col-span-6 sm:col-span-3">
                   <label
@@ -169,7 +193,6 @@ export default function SurveyView() {
                   ></textarea>
                 </div>
                 {/*Description*/}
-
             {/*Expire Date*/}
             <div className="col-span-6 sm:col-span-3">
               <label htmlFor="" className="block text-sm font-medium text-gray-">
@@ -187,16 +210,15 @@ export default function SurveyView() {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm-text-sm" />
             </div>
             {expireDate.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={expireDate} ></div>)}
-
             {/*Active*/}
             <div className="flex items-start">
               <div className="flex h-5 items-center">
-                <input 
+                <input
                 type="checkbox"
                 name="status"
                 id="status"
                 checked={survey.status}
-                onChange={(e) => 
+                onChange={(e) =>
                 setSurvey({
                   ...survey, status: e.target.checked
                 })
@@ -210,17 +232,12 @@ export default function SurveyView() {
                   <p className="text-gray-500">
                     Whether to make survey publicly available
                   </p>
-              </div>           
+              </div>
             </div>
-              {JSON.stringify(survey)} 
-            {/* <button type="button" onClick={addQuestion} >
-              Add question
-            </button> */}
           </div>
           <div >
               <SurveyQuestions 
               questions={survey.questions}
-              // options={survey.questions.data}
               onQuestionUpdate={updateQuestions}
               />
           </div>

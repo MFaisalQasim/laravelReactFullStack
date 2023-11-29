@@ -28,7 +28,7 @@ export default function Login() {
         }
         setErrors(
           {email: [response.data.message]}
-        )  
+        )
       }
     })
   }
