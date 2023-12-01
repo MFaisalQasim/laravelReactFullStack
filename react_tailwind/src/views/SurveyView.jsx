@@ -196,7 +196,7 @@ export default function SurveyView() {
             {/*Expire Date*/}
             <div className="col-span-6 sm:col-span-3">
               <label htmlFor="" className="block text-sm font-medium text-gray-">
-                Expire Date 
+                Expire Date
               </label>
               <input type="date"
               name="expire_date"
@@ -235,7 +235,7 @@ export default function SurveyView() {
               </div>
             </div>
           </div>
-          <div >
+          <div>
               <SurveyQuestions 
               questions={survey.questions}
               onQuestionUpdate={updateQuestions}
