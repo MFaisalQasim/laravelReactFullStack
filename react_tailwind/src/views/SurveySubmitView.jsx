@@ -7,9 +7,11 @@ import { useParams } from "react-router-dom";
 export default function SurveySubmitView() {
 
     // questions: [],
-    const [survey1, setSurvey1] = useState({
-        questions: [],
-    })
+    const [survey1, setSurvey1] = useState([]
+    //     {
+    //     questions: [],
+    // }
+    )
     const {slug} = useParams({})
 
     useEffect(() => {
@@ -17,7 +19,9 @@ export default function SurveySubmitView() {
         .then(({data}) => {
             console.log(data.data)
             console.log(data.data.questions)
-            setSurvey1(data.data)
+            // questions_data: data.data.questions
+            const questions = data.data.questions
+            setSurvey1(questions)
             console.log(survey1)
         })
         .catch(error => {
@@ -26,7 +30,7 @@ export default function SurveySubmitView() {
     }, [])
 
   return (
-    <PageComponent 
+    <PageComponent
     // title={!id? 'Create new Survey1' : 'Update Survey1'}
     title={'Survey1 Submit'}
     button={
@@ -47,9 +51,10 @@ export default function SurveySubmitView() {
     }
     >
         <div>Survey1SubmitView</div>
-        <h4>Question{survey1.questions.id}</h4>
+        <h4>Question{survey1.questions}</h4>
+        {/* <h4>Question{survey1.questions.id}</h4> */}
 
-        {
+        {/* {
         survey1.questions &&
             survey1.questions.map((s) => {
                 <div>
@@ -57,7 +62,7 @@ export default function SurveySubmitView() {
                     {s.id}
                 </div>
             })
-        }
+        } */}
     </PageComponent>
   )
 }

@@ -106,12 +106,12 @@ export default function SurveyView() {
     title={!id? 'Create new Survey' : 'Update Survey'}
     button={
     <div className="flex justify-between">
-      <button type="button"
-          href={`survey/public/${survey.slug}`}
+      <TButton  type="button"
+          href={`/survey/view/${survey.slug}`}
           className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700  mr-2">
           <LinkIcon className="w-4" />
           Public Survey View
-      </button>
+      </TButton>
       <button type="button"
           onClick={() => deleteSurvey(survey)}
           className="flex items-center text-sm py-1 px-4 rounded-sm text-red border border-red-300  hover:border-red-700">
