@@ -206,4 +206,19 @@ class SurveyController extends Controller
         ]);
         return $question->update($validator->validated());
     }
+    public function saveAnswer(StoreSurveyAnswerRequest $request, Survey $survey){
+        return $request;
+        return $survey;
+        $validated = $request->validated();
+
+        $surveyAnswer = SurveyAnswer::create([
+            'survey_id' => $survey->id,
+            'start_date' => date('Y-m-d H:i:s'),
+            'end_date' => date('Y-m-d H:i:s'),
+        ]); 
+
+        foreach ($variable as $key => $value) {
+            # code...
+        }
+    }
 }

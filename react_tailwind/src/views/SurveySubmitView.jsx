@@ -13,12 +13,29 @@ export default function SurveySubmitView() {
             questions: [],
         }
     )
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [finished, setFinished] = useState(false);
     const { slug } = useParams({})
 
    function answerMark(question, value) {
     answers[question.id] = value
     console.log(question, value);
+    }
+
+    function onSubmit(ev) {
+        ev.preventDefault();
+        console.log(answers);
+        axiosClient.post(`/survey/${slug}/answer`, {
+            answers
+        })
+            .then(({ data }) => {
+                setFinished(true)
+                console.log(data.data)
+            })
+            .catch(error => {
+                setFinished(true)
+                console.log(error)
+            })
     }
 
     useEffect(() => {
@@ -40,17 +57,17 @@ export default function SurveySubmitView() {
             button={
                 <div className="flex justify-between">
                     {/* <button type="button"
-          href={`survey/public/${survey.slug}`}
-          className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700  mr-2">
-          <LinkIcon className="w-4" />
-          Public Survey View
-      </button>
-      <button type="button"
-          onClick={() => deleteSurvey(survey)}
-          className="flex items-center text-sm py-1 px-4 rounded-sm text-red border border-red-300  hover:border-red-700">
-          <TrashIcon className="w-4 mr-2" />
-          Delete
-      </button> */}
+                        href={`survey/public/${survey.slug}`}
+                        className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700  mr-2">
+                        <LinkIcon className="w-4" />
+                        Public Survey View
+                    </button>
+                    <button type="button"
+                        onClick={() => deleteSurvey(survey)}
+                        className="flex items-center text-sm py-1 px-4 rounded-sm text-red border border-red-300  hover:border-red-700">
+                        <TrashIcon className="w-4 mr-2" />
+                        Delete
+                    </button> */}
                 </div>
             }
         >
@@ -60,7 +77,7 @@ export default function SurveySubmitView() {
             }
             {loading &&
                 <form
-                    // onSubmit={(ev) => onSubmit(ev)}
+                    onSubmit={(ev) => onSubmit(ev)}
                     className="container mx-auto p-4">
                     <div className="grid grid-cols-6">
                       <div className="mr-4">
@@ -74,14 +91,28 @@ export default function SurveySubmitView() {
                         <p className="text-gray-500 text-sm mb-3">{survey.description}</p>
                       </div>
                     </div>
-                    {survey.questions.map((question, index) => (
-                        <SubmitQuestionView 
-                        key={question.id}
-                        index={index}
-                        question={question}
-                        answerMark={(val)=> answerMark(question, val)}
-                        />
-                    ))}
+                    {finished
+                        &&
+                        <div className="d-flex align-center text-center text-lg">finished..</div>
+                    }
+                    {!finished && 
+                        <>
+                        {survey.questions.map((question, index) => (
+                            <SubmitQuestionView 
+                            key={question.id}
+                            index={index}
+                            question={question}
+                            answerMark={(val)=> answerMark(question, val)}
+                            />
+                        ))}
+                        </>
+                    }
+                    <button
+                      type="submit"
+                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Submit
+                    </button>
                 </form>
             }
         </PageComponent>
