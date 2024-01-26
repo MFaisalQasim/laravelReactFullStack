@@ -95,7 +95,7 @@ export default function SurveySubmitView() {
                         &&
                         <div className="d-flex align-center text-center text-lg">finished..</div>
                     }
-                    {!finished && 
+                    {/* {!finished &&  */}
                         <>
                         {survey.questions.map((question, index) => (
                             <SubmitQuestionView 
@@ -106,7 +106,7 @@ export default function SurveySubmitView() {
                             />
                         ))}
                         </>
-                    }
+                    {/* } */}
                     <button
                       type="submit"
                       className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

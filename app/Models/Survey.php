@@ -20,7 +20,7 @@ class Survey extends Model
         'description' ,
         'status' ,
         'expire_date' ];
-    
+
         /**
          * Get the options for generating the slug.
          */

@@ -206,19 +206,32 @@ class SurveyController extends Controller
         ]);
         return $question->update($validator->validated());
     }
-    public function saveAnswer(StoreSurveyAnswerRequest $request, Survey $survey){
-        return $request;
-        return $survey;
+        public function saveAnswer(StoreSurveyAnswerRequest $request, Survey $survey){
+
         $validated = $request->validated();
 
         $surveyAnswer = SurveyAnswer::create([
             'survey_id' => $survey->id,
             'start_date' => date('Y-m-d H:i:s'),
             'end_date' => date('Y-m-d H:i:s'),
-        ]); 
+        ]);
 
-        foreach ($variable as $key => $value) {
-            # code...
+        foreach ($validated['answers'] as $questionId => $answer) {
+
+            $question = SurveyQuestion::where(['id' => $questionId, 'survey_id' => $survey->id])->get();
+
+            if (!$question) {
+                return response("Invalid Qrestion Id: \"$questionId\"", 400);
+            }
+
+            $data = [
+                'survey_question_id' => $questionId,
+                'survey_answers_id' => $surveyAnswer->id,
+                'answer' => is_array($answer) ? json_encode($answer) : $answer
+            ];
+
+            $questoinAnswer = SurveyQuestionAnswer::create([$data]);
         }
+        return response("", 201);
     }
 }

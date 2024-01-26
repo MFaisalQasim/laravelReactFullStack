@@ -5,16 +5,16 @@ export default function SubmitQuestionView({
   answerMark,
 }) {
 
-    let selectedOptions = []
+  let selectedOptions = [];
 
   function onCheckboxChange(option, $event) {
-        if ($event.target.checked) {
-            selectedOptions.push(option.text);
-        } else {
-            selectedOptions = selectedOptions.filter(op => op != option.text)
-        }
-        answerMark(selectedOptions);
-    }
+      if ($event.target.checked) {
+          selectedOptions.push(option.text);
+      } else {
+          selectedOptions = selectedOptions.filter(op => op != option.text)
+      }
+      answerMark(selectedOptions);
+  }
 
   return (
     <fieldset className="mb-4">
