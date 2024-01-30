@@ -219,18 +219,19 @@ class SurveyController extends Controller
         foreach ($validated['answers'] as $questionId => $answer) {
 
             $question = SurveyQuestion::where(['id' => $questionId, 'survey_id' => $survey->id])->get();
-
+// return $questionId;
+// return $answer;
             if (!$question) {
                 return response("Invalid Qrestion Id: \"$questionId\"", 400);
             }
 
             $data = [
                 'survey_question_id' => $questionId,
-                'survey_answers_id' => $surveyAnswer->id,
+                'survey_answer_id' => $surveyAnswer->id,
                 'answer' => is_array($answer) ? json_encode($answer) : $answer
             ];
 
-            $questoinAnswer = SurveyQuestionAnswer::create([$data]);
+            $questoinAnswer = SurveyQuestionAnswer::create($data);
         }
         return response("", 201);
     }

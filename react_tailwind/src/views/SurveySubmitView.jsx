@@ -13,6 +13,7 @@ export default function SurveySubmitView() {
             questions: [],
         }
     )
+
     const [loading, setLoading] = useState(false);
     const [finished, setFinished] = useState(false);
     const { slug } = useParams({})
@@ -93,9 +94,11 @@ export default function SurveySubmitView() {
                     </div>
                     {finished
                         &&
-                        <div className="d-flex align-center text-center text-lg">finished..</div>
+                        <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
+                          Thank you for participating in the survey
+                        </div>
                     }
-                    {/* {!finished &&  */}
+                    {!finished && 
                         <>
                         {survey.questions.map((question, index) => (
                             <SubmitQuestionView 
@@ -105,14 +108,14 @@ export default function SurveySubmitView() {
                             answerMark={(val)=> answerMark(question, val)}
                             />
                         ))}
+                        <button
+                        type="submit"
+                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                        Submit
+                        </button>
                         </>
-                    {/* } */}
-                    <button
-                      type="submit"
-                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      Submit
-                    </button>
+                    }
                 </form>
             }
         </PageComponent>
