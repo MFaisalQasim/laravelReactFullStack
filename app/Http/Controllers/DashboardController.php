@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
         $latestAnswers = SurveyAnswer::query()
         ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
-        ->where('user_id', $user->id)->getModels('survey_answers.*');
+        ->where('user_id', $user->id)->take(5)->getModels('survey_answers.*');
 
         return [
             'totalSurvey' => $total,
